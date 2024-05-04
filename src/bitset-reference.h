@@ -1,1 +1,56 @@
 #pragma once
+
+#include "bitset-iterator.h"
+#include <cstdint>
+
+template <typename T>
+class bitset_iterator;
+
+template <typename T>
+class bitset_reference {
+  friend class bitset_iterator<T>;
+
+public:
+  using reference = bitset_reference&;
+  using pointer = T*;
+
+public:
+  bitset_reference() = default;
+
+  bitset_reference(const bitset_reference& another) = default;
+
+  ~bitset_reference() = default;
+
+  operator bitset_reference<const T> () const {
+    return {_p, _index};
+  }
+
+  reference operator=(bool value) {
+    uint32_t mask = 1UL << _index;
+    if (value) {
+      *_p |= mask;
+    } else {
+      *_p &= ~mask;
+    }
+    return *this;
+  }
+
+  operator bool() const {
+    return (*_p & (1UL << _index)) != 0;
+  }
+
+
+  reference flip() {
+    *_p ^= 1UL << _index;
+    return *this;
+  }
+
+
+private:
+  pointer _p;
+  std::size_t _index{};
+
+  bitset_reference(pointer p, std::size_t index)
+      : _p(p)
+      , _index(index) {}
+};
