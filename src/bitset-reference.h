@@ -1,17 +1,17 @@
 #pragma once
 
-#include "bitset-iterator.h"
+//#include "bitset-iterator.h"
 #include <cstdint>
 
-template <typename T>
-class bitset_iterator;
+//template <typename T>
+//class bitset_iterator;
 
 template <typename T>
 class bitset_reference {
-  friend class bitset_iterator<T>;
+  template <typename S>
+  friend class bitset_iterator;
 
 public:
-  using reference = bitset_reference&;
   using pointer = T*;
 
 public:
@@ -25,7 +25,7 @@ public:
     return {_p, _index};
   }
 
-  reference operator=(bool value) {
+  bitset_reference& operator=(bool value) {
     uint32_t mask = 1UL << _index;
     if (value) {
       *_p |= mask;
@@ -39,12 +39,10 @@ public:
     return (*_p & (1UL << _index)) != 0;
   }
 
-
-  reference flip() {
+  bitset_reference& flip() {
     *_p ^= 1UL << _index;
     return *this;
   }
-
 
 private:
   pointer _p;

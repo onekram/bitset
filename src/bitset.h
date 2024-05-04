@@ -1,10 +1,13 @@
 #pragma once
 
 #include "bitset-iterator.h"
-#include "bitset-view.h"
+
 #include <cstddef>
+#include <functional>
 #include <new>
 #include <string_view>
+template<typename T>
+class bitset_view;
 
 class bitset {
 public:
@@ -13,8 +16,8 @@ public:
   using const_reference = bitset_reference<const uint32_t>;
   using iterator = bitset_iterator<uint32_t>;
   using const_iterator = bitset_iterator<const uint32_t>;
-  using view = bitset_view;
-  using const_view = const bitset_view;
+  using view = bitset_view<uint32_t>;
+  using const_view = bitset_view<const uint32_t>;
   using word_type = uint32_t;
 
   static constexpr std::size_t npos = -1;
@@ -23,12 +26,12 @@ public:
   bitset(std::size_t size, bool value);
   bitset(const bitset& other);
   explicit bitset(std::string_view str);
-//  explicit bitset(const const_view& other);
-  bitset(const_iterator first, const_iterator last);
+  explicit bitset(const const_view& other);
+  bitset(const const_iterator& first, const const_iterator& last);
 
   bitset& operator=(const bitset& other) &;
   bitset& operator=(std::string_view str) &;
-//  bitset& operator=(const const_view& other) &;
+  bitset& operator=(const const_view& other) &;
 
   ~bitset();
 
@@ -46,11 +49,11 @@ public:
   iterator end();
   const_iterator end() const;
 
-//  bitset& operator&=(const const_view& other) &;
-//  bitset& operator|=(const const_view& other) &;
-//  bitset& operator^=(const const_view& other) &;
-//  bitset& operator<<=(std::size_t count) &;
-//  bitset& operator>>=(std::size_t count) &;
+  bitset& operator&=(const const_view& other) &;
+  bitset& operator|=(const const_view& other) &;
+  bitset& operator^=(const const_view& other) &;
+  bitset& operator<<=(std::size_t count) &;
+  bitset& operator>>=(std::size_t count) &;
   void flip() &;
 
   bitset& set() &;
@@ -60,8 +63,8 @@ public:
   bool any() const;
   std::size_t count() const;
 
-//  operator const_view() const;
-//  operator view();
+  operator const_view() const;
+  operator view();
 
   view subview(std::size_t offset = 0, std::size_t count = npos);
   const_view subview(std::size_t offset = 0, std::size_t count = npos) const;
@@ -72,6 +75,7 @@ private:
   word_type* _data;
 
   bitset& set_bit(bool value);
+  bitset& operation(const const_view& other, const std::function<bool(bool, bool)>& binary_op);
 
   static const size_t INT_SIZE = 32;
   static size_t get_capacity(size_t size);
@@ -82,3 +86,5 @@ bool operator!=(const bitset& left, const bitset& right);
 
 std::string to_string(const bitset& bs);
 void swap(bitset& lhs, bitset& rhs) noexcept;
+
+#include "bitset-view.h"

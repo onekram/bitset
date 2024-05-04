@@ -1,11 +1,9 @@
 #pragma once
 
-#include <cstddef>
 #include <cstdint>
 #include <iterator>
-
 #include "bitset-reference.h"
-class bitset;
+
 template <typename T>
 class bitset_iterator {
   friend class bitset;
@@ -16,10 +14,17 @@ public:
   using reference = bitset_reference<T>;
   using iterator_category = std::random_access_iterator_tag;
 
+  bitset_iterator(uint32_t* cur, size_t index)
+      : _cur(cur)
+      , _index(index) {}
+
 public:
   bitset_iterator() = default;
 
-  bitset_iterator(const bitset_iterator& other) = default;
+  bitset_iterator(const bitset_iterator& other) {
+    _cur = other._cur;
+    _index = other._index;
+  }
 
   ~bitset_iterator() = default;
 
@@ -127,8 +132,4 @@ private:
   uint32_t* _cur;
   std::size_t _index;
   static const size_t INT_BITS = 32;
-
-  bitset_iterator(uint32_t* cur, size_t index)
-      : _cur(cur)
-      , _index(index) {}
 };
