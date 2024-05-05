@@ -82,15 +82,15 @@ public:
     return _end;
   }
 
-  bitset_view& operator&=(const bitset_view& other) {
+  bitset_view& operator&=(const bitset_view<const_reference>& other) {
     return operation(other, [](bool l, bool r) { return l && r; });
   }
 
-  bitset_view& operator|=(const bitset_view& other) {
+  bitset_view& operator|=(const bitset_view<const_reference>& other) {
     return operation(other, [](bool l, bool r) { return l || r; });
   }
 
-  bitset_view& operator^=(const bitset_view& other) {
+  bitset_view& operator^=(const bitset_view<const_reference>& other) {
     return operation(other, [](bool l, bool r) { return l ^ r; });
   }
 
@@ -174,7 +174,7 @@ private:
     return *this;
   }
 
-  bitset_view& operation(const bitset_view& other, const std::function<bool(bool, bool)>& binary_op) {
+  bitset_view& operation(const bitset_view<const_reference>& other, const std::function<bool(bool, bool)>& binary_op) {
     assert(size() == other.size());
     std::transform(begin(), end(), other.begin(), begin(), binary_op);
     return *this;
