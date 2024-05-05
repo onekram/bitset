@@ -27,5 +27,7 @@ private:
   pointer _p;
   std::size_t _index;
 
+  uint32_t get_mask() const;
+
   bitset_reference(pointer p, std::size_t index);
 };

@@ -102,4 +102,5 @@ bitset operator~(const bitset::const_view& bs_view);
 std::ostream& operator<<(std::ostream& out, const bitset& bs);
 
 std::string to_string(const bitset& bs);
+
 void swap(bitset& lhs, bitset& rhs) noexcept;
