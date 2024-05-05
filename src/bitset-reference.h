@@ -11,36 +11,21 @@ public:
   using pointer = uint32_t*;
 
 public:
-  bitset_reference() = default;
+  bitset_reference();
 
-  bitset_reference(const bitset_reference& other) = default;
+  bitset_reference(const bitset_reference& other);
 
-  ~bitset_reference() = default;
+  ~bitset_reference();
 
-  bitset_reference& operator=(bool value) {
-    uint32_t mask = 1UL << _index;
-    if (value) {
-      *_p |= mask;
-    } else {
-      *_p &= ~mask;
-    }
-    return *this;
-  }
+  bitset_reference& operator=(bool value);
 
-  operator bool() const {
-    return (*_p & (1UL << _index)) != 0;
-  }
+  operator bool() const;
 
-  bitset_reference& flip() {
-    *_p ^= (1UL << _index);
-    return *this;
-  }
+  bitset_reference& flip();
 
 private:
   pointer _p;
-  std::size_t _index{};
+  std::size_t _index;
 
-  bitset_reference(pointer p, std::size_t index)
-      : _p(p)
-      , _index(index) {}
+  bitset_reference(pointer p, std::size_t index);
 };
