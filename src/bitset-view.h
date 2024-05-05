@@ -96,6 +96,15 @@ public:
     return operation(other, [](bool l, bool r) { return l ^ r; });
   }
 
+  bitset_view& operator>>=(std::size_t count) {
+    if (size() >= count) {
+      _end -= count;
+    } else {
+      _end = begin();
+    }
+    return *this;
+  }
+
   void flip() {
     std::for_each(begin(), end(), [](reference el) { el.flip(); });
   }
