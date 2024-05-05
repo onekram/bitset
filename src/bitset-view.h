@@ -18,21 +18,24 @@ public:
   using reference = T;
   using const_reference = bool;
 
-  using iterator = bitset_iterator<T>;
-  using const_iterator = bitset_iterator<bool>;
+  using iterator = bitset_iterator<reference>;
+  using const_iterator = bitset_iterator<const_reference>;
+
+  static constexpr std::size_t npos = -1;
 
 public:
   bitset_view() = default;
 
-  bitset_view(const bitset_view& other) = default;
-
-  operator bitset_view<bool>() const {
-    return {begin(), end()};
-  }
-
   bitset_view(iterator first, iterator last)
       : _begin(first)
       , _end(last) {}
+
+  bitset_view(const bitset_view& other)
+      : bitset_view(other.begin(), other.end()) {}
+
+  operator bitset_view<const_reference>() const {
+    return {begin(), end()};
+  }
 
   bitset_view& operator=(const bitset_view& other) {
     if (this != &other) {
@@ -85,7 +88,7 @@ public:
     return operation(other, [](bool l, bool r) { return l && r; });
   }
 
-  bitset_view& operator|=(const bitset_view other) {
+  bitset_view& operator|=(const bitset_view& other) {
     return operation(other, [](bool l, bool r) { return l || r; });
   }
 
@@ -117,6 +120,17 @@ public:
     return std::count(begin(), end(), true);
   }
 
+  bitset_view subview(std::size_t offset = 0, std::size_t count = npos) {
+    if (offset > size()) {
+      return {end(), end()};
+    }
+    if (offset + count <= size() && count <= offset + count) {
+      return {begin() + offset, begin() + offset + count};
+    }
+
+    return {begin() + offset, end()};
+  }
+
   friend bool operator==(const bitset_view& lhs, const bitset_view& rhs) {
     return lhs.size() == rhs.size() && std::equal(lhs.begin(), lhs.end(), rhs.begin());
   }
@@ -138,6 +152,10 @@ public:
       ss << b;
     }
     return ss.str();
+  }
+
+  friend void swap(bitset_view& lhs, bitset_view& rhs) {
+    lhs.swap(rhs);
   }
 
 private:

@@ -232,18 +232,6 @@ bool operator!=(const bitset& left, const bitset& right) {
   return !(left == right);
 }
 
-void swap(bitset& lhs, bitset& rhs) {
-  lhs.swap(rhs);
-}
-
-std::string to_string(const bitset& bs) {
-  std::stringstream ss;
-  for (auto b : bs) {
-    ss << b;
-  }
-  return ss.str();
-}
-
 bitset operator&(const bitset::const_view& left, const bitset::const_view& right) {
   bitset bs(left);
   return bs &= right;
@@ -265,13 +253,6 @@ bitset operator~(const bitset::const_view& bs_view) {
   return bs;
 }
 
-std::ostream& operator<<(std::ostream& out, const bitset& bs) {
-  for (auto el : bs) {
-    out << el;
-  }
-  return out;
-}
-
 bitset operator<<(const bitset::const_view& bs_view, std::size_t count) {
   bitset bs(bs_view);
   bs <<= count;
@@ -282,4 +263,23 @@ bitset operator>>(const bitset::const_view& bs_view, std::size_t count) {
   bitset bs(bs_view);
   bs >>= count;
   return bs;
+}
+
+std::ostream& operator<<(std::ostream& out, const bitset& bs) {
+  for (auto el : bs) {
+    out << el;
+  }
+  return out;
+}
+
+std::string to_string(const bitset& bs) {
+  std::stringstream ss;
+  for (auto b : bs) {
+    ss << b;
+  }
+  return ss.str();
+}
+
+void swap(bitset& lhs, bitset& rhs) {
+  lhs.swap(rhs);
 }

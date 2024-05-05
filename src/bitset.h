@@ -15,11 +15,11 @@ public:
   using reference = bitset_reference;
   using const_reference = bool;
 
-  using iterator = bitset_iterator<bitset_reference>;
-  using const_iterator = bitset_iterator<bool>;
+  using iterator = bitset_iterator<reference>;
+  using const_iterator = bitset_iterator<const_reference>;
 
-  using view = bitset_view<bitset_reference>;
-  using const_view = bitset_view<bool>;
+  using view = bitset_view<reference>;
+  using const_view = bitset_view<const_reference>;
 
   using word_type = uint32_t;
 
