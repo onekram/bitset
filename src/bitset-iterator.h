@@ -9,13 +9,9 @@ template <typename T>
 class bitset_iterator {
 public:
   using value_type = bool;
-
   using difference_type = std::ptrdiff_t;
-
   using pointer = void;
-
   using reference = T;
-
   using iterator_category = std::random_access_iterator_tag;
 
 public:

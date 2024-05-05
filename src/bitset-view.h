@@ -8,8 +8,6 @@
 #include <functional>
 #include <sstream>
 
-class bitset;
-
 template <typename T>
 class bitset_view {
 public:
