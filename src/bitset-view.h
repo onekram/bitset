@@ -1,11 +1,11 @@
 #pragma once
 
 #include "bitset-iterator.h"
-#include "bitset.h"
 
 #include <algorithm>
 #include <cassert>
 #include <functional>
+class bitset;
 
 template <typename T>
 class bitset_view {
@@ -31,10 +31,6 @@ public:
       : _begin(first)
       , _end(last) {}
 
-  explicit bitset_view(const bitset& other)
-      : _begin(other.begin())
-      , _end(other.end()) {}
-
   bitset_view& operator=(const bitset_view& other) {
     if (this != &other) {
       _begin = other._begin;
@@ -51,7 +47,7 @@ public:
     return _end;
   }
 
-  size_t size() const {
+  std::size_t size() const {
     return _end - _begin;
   }
 
@@ -65,26 +61,6 @@ public:
 
   bitset_view& operator^=(const bitset_view& other) {
     return operation(other, [](bool l, bool r) { return l ^ r; });
-  }
-
-  friend bitset operator&(const bitset_view& left, const bitset_view& right) {
-    bitset bs(left);
-    return bs &= right;
-  }
-
-  friend bitset operator|(const bitset_view& left, const bitset_view& right) {
-    bitset bs(left);
-    return bs |= right;
-  }
-
-  friend bitset operator^(const bitset_view& left, const bitset_view& right) {
-    bitset bs(left);
-    return bs ^= right;
-  }
-
-  friend bitset operator~(const bitset_view& bs_view) {
-    bitset bs(bs_view);
-    return ~bs;
   }
 
   void flip() {

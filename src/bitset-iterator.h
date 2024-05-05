@@ -20,7 +20,7 @@ public:
 
   ~bitset_iterator() = default;
 
-  bitset_iterator(uint32_t* cur, size_t index)
+  bitset_iterator(uint32_t* cur, std::size_t index)
       : _cur(cur)
       , _index(index) {}
 
@@ -122,5 +122,5 @@ public:
 private:
   uint32_t* _cur;
   std::size_t _index;
-  static const size_t INT_BITS = 32;
+  static const std::size_t INT_BITS = 32;
 };

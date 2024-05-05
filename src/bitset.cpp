@@ -151,7 +151,7 @@ bitset& bitset::set_bit(const iterator& first, const iterator& last, bool value)
   return *this;
 }
 
-size_t bitset::get_capacity(size_t size) {
+std::size_t bitset::get_capacity(std::size_t size) {
   return (size + bitset::INT_SIZE - 1) / bitset::INT_SIZE;
 }
 
@@ -209,7 +209,7 @@ bitset::const_view bitset::subview(std::size_t offset, std::size_t count) const 
   return {begin() + offset, end()};
 }
 
-bitset::bitset(const bitset::const_iterator& first, const bitset::const_iterator& last, size_t size)
+bitset::bitset(const bitset::const_iterator& first, const bitset::const_iterator& last, std::size_t size)
     : _size(size)
     , _capacity(get_capacity(size))
     , _data(nullptr) {
@@ -244,25 +244,25 @@ std::string to_string(const bitset& bs) {
   return ss.str();
 }
 
-bitset operator&(const bitset& left, const bitset& right) {
-  bitset copy(left);
-  return copy &= right;
+bitset operator&(const bitset::const_view& left, const bitset::const_view& right) {
+  bitset bs(left);
+  return bs &= right;
 }
 
-bitset operator|(const bitset& left, const bitset& right) {
-  bitset copy(left);
-  return copy |= right;
+bitset operator|(const bitset::const_view& left, const bitset::const_view& right) {
+  bitset bs(left);
+  return bs |= right;
 }
 
-bitset operator^(const bitset& left, const bitset& right) {
-  bitset copy(left);
-  return copy ^= right;
+bitset operator^(const bitset::const_view& left, const bitset::const_view& right) {
+  bitset bs(left);
+  return bs ^= right;
 }
 
-bitset operator~(const bitset& bs) {
-  bitset copy(bs);
-  copy.flip();
-  return copy;
+bitset operator~(const bitset::const_view& bs_view) {
+  bitset bs(bs_view);
+  bs.flip();
+  return bs;
 }
 
 std::ostream& operator<<(std::ostream& out, const bitset& bs) {

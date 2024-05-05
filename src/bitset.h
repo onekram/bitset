@@ -1,18 +1,12 @@
 #pragma once
 
+#include "bitset-iterator.h"
+#include "bitset-view.h"
+
 #include <cstddef>
 #include <cstdint>
 #include <functional>
 #include <string_view>
-
-template <typename T>
-class bitset_view;
-
-template <typename T>
-class bitset_iterator;
-
-template <typename T>
-class bitset_reference;
 
 class bitset {
 public:
@@ -87,20 +81,21 @@ private:
   bitset& operation(const const_view& other, const std::function<bool(bool, bool)>& binary_op);
 
   static const size_t INT_SIZE = 32;
-  static size_t get_capacity(size_t size);
+  static std::size_t get_capacity(std::size_t size);
 };
 
 bool operator==(const bitset& left, const bitset& right);
 bool operator!=(const bitset& left, const bitset& right);
 
-bitset operator&(const bitset& left, const bitset& right);
-bitset operator|(const bitset& left, const bitset& right);
-bitset operator^(const bitset& left, const bitset& right);
-bitset operator~(const bitset& bs);
+bitset operator&(const bitset::const_view& left, const bitset::const_view& right);
+
+bitset operator|(const bitset::const_view& left, const bitset::const_view& right);
+
+bitset operator^(const bitset::const_view& left, const bitset::const_view& right);
+
+bitset operator~(const bitset::const_view& bs_view);
+
 std::ostream& operator<<(std::ostream& out, const bitset& bs);
 
 std::string to_string(const bitset& bs);
 void swap(bitset& lhs, bitset& rhs) noexcept;
-
-#include "bitset-iterator.h"
-#include "bitset-view.h"
