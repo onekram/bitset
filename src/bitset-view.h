@@ -1,10 +1,11 @@
 #pragma once
 
-#include "bitset-iterator.h"
-#include "bitset.h"
-
+#include <algorithm>
 #include <cassert>
 #include <functional>
+
+#include "bitset-iterator.h"
+#include "bitset.h"
 
 template <typename T>
 class bitset_view {
