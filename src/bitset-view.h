@@ -1,21 +1,21 @@
 #pragma once
 
-#include <cassert>
-#include <functional>
-
 #include "bitset-iterator.h"
 #include "bitset.h"
 
+#include <cassert>
+#include <functional>
+
 template <typename T>
 class bitset_view {
-  public:
-    using value_type = bool;
-    using reference = bitset_reference<T>;
-    using const_reference = bitset_reference<const T>;
-    using iterator = bitset_iterator<T>;
-    using const_iterator = bitset_iterator<const T>;
+public:
+  using value_type = bool;
+  using reference = bitset_reference<T>;
+  using const_reference = bitset_reference<const T>;
+  using iterator = bitset_iterator<T>;
+  using const_iterator = bitset_iterator<const T>;
 
-  public:
+public:
   bitset_view() = default;
 
   bitset_view(const bitset_view& other) = default;
@@ -31,7 +31,6 @@ class bitset_view {
   explicit bitset_view(const bitset& other)
       : _begin(other.begin())
       , _end(other.end()) {}
-
 
   bitset_view& operator=(const bitset_view& other) {
     if (this != &other) {
@@ -54,15 +53,15 @@ class bitset_view {
   }
 
   bitset_view& operator&=(const bitset_view& other) {
-    return operation(other, [](bool l, bool r) {return l && r;});
+    return operation(other, [](bool l, bool r) { return l && r; });
   }
 
   bitset_view& operator|=(const bitset_view other) {
-    return operation(other, [](bool l, bool r) {return l || r;});
+    return operation(other, [](bool l, bool r) { return l || r; });
   }
 
   bitset_view& operator^=(const bitset_view& other) {
-    return operation(other, [](bool l, bool r) {return l ^ r;});
+    return operation(other, [](bool l, bool r) { return l ^ r; });
   }
 
   friend bitset operator&(const bitset_view& left, const bitset_view& right) {
@@ -86,7 +85,7 @@ class bitset_view {
   }
 
   void flip() {
-    std::for_each(begin(), end(), [](reference el) {el.flip();});
+    std::for_each(begin(), end(), [](reference el) { el.flip(); });
   }
 
   bitset_view& set() {
@@ -98,22 +97,22 @@ class bitset_view {
   }
 
   bool all() const {
-    return std::all_of(begin(), end(), [](bool el) {return el;});
+    return std::all_of(begin(), end(), [](bool el) { return el; });
   }
 
   bool any() const {
-    return std::any_of(begin(), end(), [](bool el) {return el;});
+    return std::any_of(begin(), end(), [](bool el) { return el; });
   }
 
   std::size_t count() const {
     return std::count(begin(), end(), true);
   }
 
-  reference operator[] (std::size_t index) {
+  reference operator[](std::size_t index) {
     return *(begin() + index);
   }
 
-  const_reference operator[] (std::size_t index) const {
+  const_reference operator[](std::size_t index) const {
     return *(begin() + index);
   }
 
@@ -125,19 +124,18 @@ class bitset_view {
     return !(lhs == rhs);
   }
 
+private:
+  iterator _begin;
+  iterator _end;
 
-  private:
-    iterator _begin;
-    iterator _end;
+  bitset_view& set_bit(bool value) {
+    std::fill(begin(), end(), value);
+    return *this;
+  }
 
-    bitset_view& set_bit(bool value) {
-      std::fill(begin(), end(), value);
-      return *this;
-    }
-
-    bitset_view& operation(const bitset_view& other, const std::function<bool(bool, bool)>& binary_op) {
-      assert(size() == other.size());
-      std::transform(begin(), end(), other.begin(), begin(), binary_op);
-      return *this;
-    }
+  bitset_view& operation(const bitset_view& other, const std::function<bool(bool, bool)>& binary_op) {
+    assert(size() == other.size());
+    std::transform(begin(), end(), other.begin(), begin(), binary_op);
+    return *this;
+  }
 };

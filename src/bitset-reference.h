@@ -4,7 +4,6 @@
 
 template <typename T>
 class bitset_reference {
-
   template <typename S>
   friend class bitset_iterator;
 
@@ -18,7 +17,7 @@ public:
 
   ~bitset_reference() = default;
 
-  operator bitset_reference<const T> () const {
+  operator bitset_reference<const T>() const {
     return {_p, _index};
   }
 

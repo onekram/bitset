@@ -1,12 +1,11 @@
 #pragma once
 
-#include <iterator>
-
 #include "bitset-reference.h"
+
+#include <iterator>
 
 template <typename T>
 class bitset_iterator {
-
 public:
   using value_type = bool;
   using difference_type = std::ptrdiff_t;
@@ -21,12 +20,11 @@ public:
 
   ~bitset_iterator() = default;
 
-
   bitset_iterator(uint32_t* cur, size_t index)
       : _cur(cur)
       , _index(index) {}
 
-  operator bitset_iterator<const T> () const {
+  operator bitset_iterator<const T>() const {
     return {_cur, _index};
   }
 
@@ -36,7 +34,7 @@ public:
     return {_cur + _index / INT_BITS, _index % INT_BITS};
   }
 
-  reference operator[] (difference_type n) const {
+  reference operator[](difference_type n) const {
     return {_cur + (_index + n) / INT_BITS, (_index + n) % INT_BITS};
   }
 
@@ -50,7 +48,7 @@ public:
     return !(rhs == lhs);
   }
 
-  friend bool operator<(const bitset_iterator& lhs, const bitset_iterator& rhs)  {
+  friend bool operator<(const bitset_iterator& lhs, const bitset_iterator& rhs) {
     return lhs._index < rhs._index;
   }
 
@@ -120,7 +118,6 @@ public:
   friend difference_type operator-(const bitset_iterator& lhs, const bitset_iterator& rhs) {
     return static_cast<difference_type>(lhs._index - rhs._index);
   }
-
 
 private:
   uint32_t* _cur;

@@ -1,9 +1,10 @@
+#include "bitset.h"
+
+#include "bitset-iterator.h"
+
 #include <algorithm>
 #include <cassert>
 #include <sstream>
-
-#include "bitset.h"
-#include "bitset-iterator.h"
 
 bitset::bitset()
     : _size(0)
@@ -34,16 +35,12 @@ bitset::bitset(std::string_view str)
     , _data(nullptr) {
   if (_capacity > 0) {
     _data = new uint32_t[_capacity]{};
-    std::generate(begin(),
-                  end(),
-                  [oit = str.begin()] () mutable {return *(oit++) == '1';});
+    std::generate(begin(), end(), [oit = str.begin()]() mutable { return *(oit++) == '1'; });
   }
 }
 
 bitset::bitset(const const_view& other)
     : bitset(other.begin(), other.end()) {}
-
-
 
 bitset& bitset::operator=(const bitset& other) & {
   if (this != &other) {
@@ -77,11 +74,11 @@ bool bitset::empty() const {
   return size() == 0;
 }
 
-bitset::reference bitset::operator[] (std::size_t index) {
+bitset::reference bitset::operator[](std::size_t index) {
   return *(begin() + index);
 }
 
-bitset::const_reference bitset::operator[] (std::size_t index) const {
+bitset::const_reference bitset::operator[](std::size_t index) const {
   return *(begin() + index);
 }
 
@@ -102,15 +99,15 @@ bitset::const_iterator bitset::end() const {
 }
 
 bitset& bitset::operator&=(const const_view& other) & {
-  return operation(other, [](bool l, bool r) {return l && r;});
+  return operation(other, [](bool l, bool r) { return l && r; });
 }
 
 bitset& bitset::operator|=(const const_view& other) & {
-  return operation(other, [](bool l, bool r) {return l || r;});
+  return operation(other, [](bool l, bool r) { return l || r; });
 }
 
 bitset& bitset::operator^=(const const_view& other) & {
-  return operation(other, [](bool l, bool r) {return l ^ r;});
+  return operation(other, [](bool l, bool r) { return l ^ r; });
 }
 
 bitset& bitset::operator<<=(std::size_t count) & {
@@ -133,7 +130,7 @@ bitset& bitset::operator>>=(std::size_t count) & {
 }
 
 void bitset::flip() & {
-  std::for_each(begin(), end(), [](reference el) {el.flip();});
+  std::for_each(begin(), end(), [](reference el) { el.flip(); });
 }
 
 bitset& bitset::set() & {
@@ -160,11 +157,11 @@ void bitset::swap(bitset& other) noexcept {
 }
 
 bool bitset::all() const {
-  return std::all_of(begin(), end(), [](bool el) {return el;});
+  return std::all_of(begin(), end(), [](bool el) { return el; });
 }
 
 bool bitset::any() const {
-  return std::any_of(begin(), end(), [](bool el) {return el;});
+  return std::any_of(begin(), end(), [](bool el) { return el; });
 }
 
 std::size_t bitset::count() const {
@@ -208,23 +205,21 @@ bitset::const_view bitset::subview(std::size_t offset, std::size_t count) const 
 }
 
 bitset::bitset(const bitset::const_iterator& first, const bitset::const_iterator& last, size_t size)
-    : _size (size)
+    : _size(size)
     , _capacity(get_capacity(size))
     , _data(nullptr) {
   if (_capacity > 0) {
     _data = new uint32_t[_capacity]{};
-    std::generate(begin(),
-                  end(),
-                  [oit = first, &last] () mutable -> bool {
-                    if (oit >= last) {
-                      return false;
-                    }
-                    return *(oit++);
-                  });
+    std::generate(begin(), end(), [oit = first, &last]() mutable -> bool {
+      if (oit >= last) {
+        return false;
+      }
+      return *(oit++);
+    });
   }
 }
 
-bool operator ==(const bitset& left, const bitset& right) {
+bool operator==(const bitset& left, const bitset& right) {
   return left.size() == right.size() && std::equal(left.begin(), left.end(), right.begin());
 }
 
