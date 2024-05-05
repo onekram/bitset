@@ -2,6 +2,7 @@
 
 #include "bitset-reference.h"
 
+#include <cstddef>
 #include <iterator>
 
 template <typename T>

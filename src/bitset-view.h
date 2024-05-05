@@ -4,7 +4,9 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cstddef>
 #include <functional>
+
 class bitset;
 
 template <typename T>
