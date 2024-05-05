@@ -7,6 +7,9 @@ class bitset_reference {
   template <typename S>
   friend class bitset_iterator;
 
+  template <typename S>
+  friend class bitset_view;
+
 public:
   using pointer = T*;
 
@@ -16,6 +19,10 @@ public:
   bitset_reference(const bitset_reference& other) = default;
 
   ~bitset_reference() = default;
+
+  bitset_reference(pointer p, std::size_t index)
+      : _p(p)
+      , _index(index) {}
 
   operator bitset_reference<const T>() const {
     return {_p, _index};
@@ -43,8 +50,4 @@ public:
 private:
   pointer _p;
   std::size_t _index{};
-
-  bitset_reference(pointer p, std::size_t index)
-      : _p(p)
-      , _index(index) {}
 };

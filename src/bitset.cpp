@@ -1,10 +1,8 @@
-#include "bitset.h"
-
-#include "bitset-iterator.h"
-
 #include <algorithm>
 #include <cassert>
 #include <sstream>
+
+#include "bitset.h"
 
 bitset::bitset()
     : _size(0)
@@ -266,3 +264,6 @@ std::ostream& operator<<(std::ostream& out, const bitset& bs) {
   }
   return out;
 }
+
+template class bitset_view<uint32_t>;
+template class bitset_view<const uint32_t>;

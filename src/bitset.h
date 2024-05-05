@@ -1,17 +1,12 @@
 #pragma once
 
 #include <cstddef>
+#include <cstdint>
 #include <functional>
 #include <string_view>
 
-template <typename T>
-class bitset_view;
-
-template <typename T>
-class bitset_iterator;
-
-template <typename T>
-class bitset_reference;
+#include "bitset-reference.h"
+#include "bitset-view.h"
 
 class bitset {
 public:
@@ -98,6 +93,3 @@ std::ostream& operator<<(std::ostream& out, const bitset& bs);
 
 std::string to_string(const bitset& bs);
 void swap(bitset& lhs, bitset& rhs) noexcept;
-
-#include "bitset-iterator.h"
-#include "bitset-view.h"
