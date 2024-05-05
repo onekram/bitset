@@ -18,10 +18,6 @@ public:
 
   ~bitset_reference() = default;
 
-  operator bitset_reference<const T>() const {
-    return {_p, _index};
-  }
-
   bitset_reference& operator=(bool value) {
     uint32_t mask = 1UL << _index;
     if (value) {
