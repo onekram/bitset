@@ -26,7 +26,7 @@ bitset::bitset(std::size_t size, bool value)
 bitset::bitset(const bitset& other)
     : bitset(other.begin(), other.end()) {}
 
-bitset::bitset(const const_iterator& first, const const_iterator& last)
+bitset::bitset(const_iterator first, const_iterator last)
     : bitset(first, last, last - first) {}
 
 bitset::bitset(std::string_view str)
@@ -155,7 +155,7 @@ std::size_t bitset::get_capacity(std::size_t size) {
   return (size + bitset::INT_SIZE - 1) / bitset::INT_SIZE;
 }
 
-void bitset::swap(bitset& other) noexcept {
+void bitset::swap(bitset& other) {
   std::swap(_size, other._size);
   std::swap(_capacity, other._capacity);
   std::swap(_data, other._data);
@@ -209,7 +209,7 @@ bitset::const_view bitset::subview(std::size_t offset, std::size_t count) const 
   return {begin() + offset, end()};
 }
 
-bitset::bitset(const bitset::const_iterator& first, const bitset::const_iterator& last, std::size_t size)
+bitset::bitset(const_iterator first, const_iterator last, std::size_t size)
     : _size(size)
     , _capacity(get_capacity(size))
     , _data(nullptr) {
@@ -232,7 +232,7 @@ bool operator!=(const bitset& left, const bitset& right) {
   return !(left == right);
 }
 
-void swap(bitset& lhs, bitset& rhs) noexcept {
+void swap(bitset& lhs, bitset& rhs) {
   lhs.swap(rhs);
 }
 
@@ -270,4 +270,16 @@ std::ostream& operator<<(std::ostream& out, const bitset& bs) {
     out << el;
   }
   return out;
+}
+
+bitset operator<<(const bitset::const_view& bs_view, std::size_t count) {
+  bitset bs(bs_view);
+  bs <<= count;
+  return bs;
+}
+
+bitset operator>>(const bitset::const_view& bs_view, std::size_t count) {
+  bitset bs(bs_view);
+  bs >>= count;
+  return bs;
 }

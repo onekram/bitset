@@ -30,7 +30,7 @@ public:
   bitset(const bitset& other);
   explicit bitset(std::string_view str);
   explicit bitset(const const_view& other);
-  bitset(const const_iterator& first, const const_iterator& last);
+  bitset(const_iterator first, const_iterator last);
 
   bitset& operator=(const bitset& other) &;
   bitset& operator=(std::string_view str) &;
@@ -38,7 +38,7 @@ public:
 
   ~bitset();
 
-  void swap(bitset& other) noexcept;
+  void swap(bitset& other);
 
   std::size_t size() const;
   bool empty() const;
@@ -77,7 +77,7 @@ private:
   size_t _capacity;
   word_type* _data;
 
-  bitset(const const_iterator& first, const const_iterator& last, std::size_t size);
+  bitset(const_iterator first, const_iterator last, std::size_t size);
 
   bitset& set_bit(bool value);
   bitset& set_bit(const iterator& first, const iterator& last, bool value);
@@ -92,15 +92,14 @@ bool operator==(const bitset& left, const bitset& right);
 bool operator!=(const bitset& left, const bitset& right);
 
 bitset operator&(const bitset::const_view& left, const bitset::const_view& right);
-
 bitset operator|(const bitset::const_view& left, const bitset::const_view& right);
-
 bitset operator^(const bitset::const_view& left, const bitset::const_view& right);
-
 bitset operator~(const bitset::const_view& bs_view);
+bitset operator<<(const bitset::const_view& bs_view, std::size_t count);
+bitset operator>>(const bitset::const_view& bs_view, std::size_t count);
 
 std::ostream& operator<<(std::ostream& out, const bitset& bs);
 
 std::string to_string(const bitset& bs);
 
-void swap(bitset& lhs, bitset& rhs) noexcept;
+void swap(bitset& lhs, bitset& rhs);
