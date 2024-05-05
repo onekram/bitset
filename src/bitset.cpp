@@ -117,6 +117,7 @@ bitset& bitset::operator<<=(std::size_t count) & {
     return *this;
   }
   _size += count;
+  set_bit(end() - count, end(), false);
   return *this;
 }
 
@@ -142,7 +143,11 @@ bitset& bitset::reset() & {
 }
 
 bitset& bitset::set_bit(bool value) {
-  std::fill(begin(), end(), value);
+  return set_bit(begin(), end(), value);
+}
+
+bitset& bitset::set_bit(const iterator& first, const iterator& last, bool value) {
+  std::fill(first, last, value);
   return *this;
 }
 

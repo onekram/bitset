@@ -82,6 +82,8 @@ private:
   bitset(const const_iterator& first, const const_iterator& last, size_t size);
 
   bitset& set_bit(bool value);
+  bitset& set_bit(const iterator& first, const iterator& last, bool value);
+
   bitset& operation(const const_view& other, const std::function<bool(bool, bool)>& binary_op);
 
   static const size_t INT_SIZE = 32;

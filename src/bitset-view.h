@@ -21,6 +21,8 @@ public:
 
   bitset_view(const bitset_view& other) = default;
 
+  ~bitset_view() = default;
+
   operator bitset_view<const T>() const {
     return {begin(), end()};
   }

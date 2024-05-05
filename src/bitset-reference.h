@@ -36,7 +36,7 @@ public:
   }
 
   bitset_reference& flip() {
-    *_p ^= 1UL << _index;
+    *_p ^= (1UL << _index);
     return *this;
   }
 
