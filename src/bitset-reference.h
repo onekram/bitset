@@ -3,7 +3,6 @@
 #include <cstddef>
 #include <cstdint>
 
-//template <typename T>
 class bitset_reference {
   template <typename S>
   friend class bitset_iterator;
