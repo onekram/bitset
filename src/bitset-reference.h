@@ -1,13 +1,10 @@
 #pragma once
 
-//#include "bitset-iterator.h"
 #include <cstdint>
-
-//template <typename T>
-//class bitset_iterator;
 
 template <typename T>
 class bitset_reference {
+
   template <typename S>
   friend class bitset_iterator;
 
@@ -17,7 +14,7 @@ public:
 public:
   bitset_reference() = default;
 
-  bitset_reference(const bitset_reference& another) = default;
+  bitset_reference(const bitset_reference& other) = default;
 
   ~bitset_reference() = default;
 

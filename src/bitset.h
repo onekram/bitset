@@ -1,13 +1,17 @@
 #pragma once
 
-#include "bitset-iterator.h"
-
 #include <cstddef>
 #include <functional>
-#include <new>
 #include <string_view>
-template<typename T>
+
+template <typename T>
 class bitset_view;
+
+template <typename T>
+class bitset_iterator;
+
+template <typename T>
+class bitset_reference;
 
 class bitset {
 public:
@@ -74,6 +78,8 @@ private:
   size_t _capacity;
   word_type* _data;
 
+  bitset(const const_iterator& first, const const_iterator& last, size_t size);
+
   bitset& set_bit(bool value);
   bitset& operation(const const_view& other, const std::function<bool(bool, bool)>& binary_op);
 
@@ -84,7 +90,15 @@ private:
 bool operator==(const bitset& left, const bitset& right);
 bool operator!=(const bitset& left, const bitset& right);
 
+bitset operator&(const bitset& left, const bitset& right);
+bitset operator|(const bitset& left, const bitset& right);
+bitset operator^(const bitset& left, const bitset& right);
+bitset operator~(const bitset& bs);
+std::ostream& operator<<(std::ostream& out, const bitset& bs);
+
+
 std::string to_string(const bitset& bs);
 void swap(bitset& lhs, bitset& rhs) noexcept;
 
+#include "bitset-iterator.h"
 #include "bitset-view.h"

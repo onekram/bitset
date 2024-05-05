@@ -1,12 +1,12 @@
 #pragma once
 
-#include <cstdint>
 #include <iterator>
+
 #include "bitset-reference.h"
 
 template <typename T>
 class bitset_iterator {
-  friend class bitset;
+
 public:
   using value_type = bool;
   using difference_type = std::ptrdiff_t;
@@ -14,19 +14,17 @@ public:
   using reference = bitset_reference<T>;
   using iterator_category = std::random_access_iterator_tag;
 
-  bitset_iterator(uint32_t* cur, size_t index)
-      : _cur(cur)
-      , _index(index) {}
-
 public:
   bitset_iterator() = default;
 
-  bitset_iterator(const bitset_iterator& other) {
-    _cur = other._cur;
-    _index = other._index;
-  }
+  bitset_iterator(const bitset_iterator& other) = default;
 
   ~bitset_iterator() = default;
+
+
+  bitset_iterator(uint32_t* cur, size_t index)
+      : _cur(cur)
+      , _index(index) {}
 
   operator bitset_iterator<const T> () const {
     return {_cur, _index};
@@ -34,11 +32,11 @@ public:
 
   // Element access
 
-  reference operator*() {
+  reference operator*() const {
     return {_cur + _index / INT_BITS, _index % INT_BITS};
   }
 
-  reference operator[] (difference_type n) {
+  reference operator[] (difference_type n) const {
     return {_cur + (_index + n) / INT_BITS, (_index + n) % INT_BITS};
   }
 
@@ -53,7 +51,7 @@ public:
   }
 
   friend bool operator<(const bitset_iterator& lhs, const bitset_iterator& rhs)  {
-    return rhs._index < lhs._index;
+    return lhs._index < rhs._index;
   }
 
   friend bool operator>(const bitset_iterator& lhs, const bitset_iterator& rhs) {
@@ -81,7 +79,7 @@ public:
     return copy;
   }
 
-  bitset_iterator operator--() {
+  bitset_iterator& operator--() {
     --_index;
     return *this;
   }
@@ -93,11 +91,7 @@ public:
   }
 
   bitset_iterator& operator+=(difference_type n) {
-    if (n >= 0) {
-      _index += n;
-    } else {
-      _index -= -n;
-    }
+    _index += n;
     return *this;
   }
 
