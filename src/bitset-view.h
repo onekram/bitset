@@ -6,6 +6,7 @@
 #include <cassert>
 #include <cstddef>
 #include <functional>
+#include <sstream>
 
 class bitset;
 
@@ -25,8 +26,6 @@ public:
 
   bitset_view(const bitset_view& other) = default;
 
-  ~bitset_view() = default;
-
   operator bitset_view<bool>() const {
     return {begin(), end()};
   }
@@ -43,16 +42,43 @@ public:
     return *this;
   }
 
-  iterator begin() const {
-    return _begin;
-  }
+  ~bitset_view() = default;
 
-  iterator end() const {
-    return _end;
+  void swap(bitset_view& other) {
+    std::swap(begin(), other.begin());
+    std::swap(end(), other.end());
   }
 
   std::size_t size() const {
     return _end - _begin;
+  }
+
+  bool empty() const {
+    return size() == 0;
+  }
+
+  reference operator[](std::size_t index) {
+    return *(begin() + index);
+  }
+
+  const_reference operator[](std::size_t index) const {
+    return *(begin() + index);
+  }
+
+  iterator begin() {
+    return _begin;
+  }
+
+  const_iterator begin() const {
+    return _begin;
+  }
+
+  iterator end() {
+    return _end;
+  }
+
+  const_iterator end() const {
+    return _end;
   }
 
   bitset_view& operator&=(const bitset_view& other) {
@@ -91,20 +117,27 @@ public:
     return std::count(begin(), end(), true);
   }
 
-  reference operator[](std::size_t index) {
-    return *(begin() + index);
-  }
-
-  const_reference operator[](std::size_t index) const {
-    return *(begin() + index);
-  }
-
   friend bool operator==(const bitset_view& lhs, const bitset_view& rhs) {
     return lhs.size() == rhs.size() && std::equal(lhs.begin(), lhs.end(), rhs.begin());
   }
 
   friend bool operator!=(const bitset_view& lhs, const bitset_view& rhs) {
     return !(lhs == rhs);
+  }
+
+  friend std::ostream& operator<<(std::ostream& out, const bitset_view& bs_view) {
+    for (bitset_view::const_iterator it = bs_view.begin(); it != bs_view.end(); ++it) {
+      out << (*it);
+    }
+    return out;
+  }
+
+  friend std::string to_string(const bitset_view& bs_view) {
+    std::stringstream ss;
+    for (auto b : bs_view) {
+      ss << b;
+    }
+    return ss.str();
   }
 
 private:
