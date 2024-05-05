@@ -9,9 +9,13 @@ template <typename T>
 class bitset_iterator {
 public:
   using value_type = bool;
+
   using difference_type = std::ptrdiff_t;
+
   using pointer = void;
-  using reference = bitset_reference<T>;
+
+  using reference = T;
+
   using iterator_category = std::random_access_iterator_tag;
 
 public:
@@ -25,18 +29,18 @@ public:
       : _cur(cur)
       , _index(index) {}
 
-  operator bitset_iterator<const T>() const {
+  operator bitset_iterator<bool>() const {
     return {_cur, _index};
   }
 
   // Element access
 
   reference operator*() const {
-    return {_cur + _index / INT_BITS, _index % INT_BITS};
+    return bitset_reference(_cur + _index / INT_BITS, _index % INT_BITS);
   }
 
   reference operator[](difference_type n) const {
-    return {_cur + (_index + n) / INT_BITS, (_index + n) % INT_BITS};
+    return bitset_reference(_cur + (_index + n) / INT_BITS, (_index + n) % INT_BITS);
   }
 
   // Comparison

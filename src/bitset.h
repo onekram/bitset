@@ -11,12 +11,16 @@
 class bitset {
 public:
   using value_type = bool;
-  using reference = bitset_reference<uint32_t>;
-  using const_reference = bitset_reference<const uint32_t>;
-  using iterator = bitset_iterator<uint32_t>;
-  using const_iterator = bitset_iterator<const uint32_t>;
-  using view = bitset_view<uint32_t>;
-  using const_view = bitset_view<const uint32_t>;
+
+  using reference = bitset_reference;
+  using const_reference = bool;
+
+  using iterator = bitset_iterator<bitset_reference>;
+  using const_iterator = bitset_iterator<bool>;
+
+  using view = bitset_view<bitset_reference>;
+  using const_view = bitset_view<bool>;
+
   using word_type = uint32_t;
 
   static constexpr std::size_t npos = -1;
@@ -73,14 +77,14 @@ private:
   size_t _capacity;
   word_type* _data;
 
-  bitset(const const_iterator& first, const const_iterator& last, size_t size);
+  bitset(const const_iterator& first, const const_iterator& last, std::size_t size);
 
   bitset& set_bit(bool value);
   bitset& set_bit(const iterator& first, const iterator& last, bool value);
 
   bitset& operation(const const_view& other, const std::function<bool(bool, bool)>& binary_op);
 
-  static const size_t INT_SIZE = 32;
+  static const std::size_t INT_SIZE = 32;
   static std::size_t get_capacity(std::size_t size);
 };
 

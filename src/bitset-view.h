@@ -13,10 +13,12 @@ template <typename T>
 class bitset_view {
 public:
   using value_type = bool;
-  using reference = bitset_reference<T>;
-  using const_reference = bitset_reference<const T>;
+
+  using reference = T;
+  using const_reference = bool;
+
   using iterator = bitset_iterator<T>;
-  using const_iterator = bitset_iterator<const T>;
+  using const_iterator = bitset_iterator<bool>;
 
 public:
   bitset_view() = default;
@@ -25,7 +27,7 @@ public:
 
   ~bitset_view() = default;
 
-  operator bitset_view<const T>() const {
+  operator bitset_view<bool>() const {
     return {begin(), end()};
   }
 
