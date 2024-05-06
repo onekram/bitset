@@ -46,8 +46,8 @@ public:
   ~bitset_view() = default;
 
   void swap(bitset_view& other) {
-    std::swap(begin(), other.begin());
-    std::swap(end(), other.end());
+    std::swap(_begin, other._begin);
+    std::swap(_end, other._end);
   }
 
   std::size_t size() const {
@@ -62,7 +62,7 @@ public:
     return *(begin() + index);
   }
 
-  const_reference operator[](std::size_t index) const {
+  reference operator[](std::size_t index) const {
     return *(begin() + index);
   }
 
@@ -70,7 +70,7 @@ public:
     return _begin;
   }
 
-  const_iterator begin() const {
+  iterator begin() const {
     return _begin;
   }
 
@@ -78,7 +78,7 @@ public:
     return _end;
   }
 
-  const_iterator end() const {
+  iterator end() const {
     return _end;
   }
 
@@ -138,6 +138,17 @@ public:
     return {begin() + offset, end()};
   }
 
+  bitset_view subview(std::size_t offset = 0, std::size_t count = npos) const {
+    if (offset > size()) {
+      return {end(), end()};
+    }
+    if (offset + count <= size() && count <= offset + count) {
+      return {begin() + offset, begin() + offset + count};
+    }
+
+    return {begin() + offset, end()};
+  }
+
   friend bool operator==(const bitset_view& lhs, const bitset_view& rhs) {
     return lhs.size() == rhs.size() && std::equal(lhs.begin(), lhs.end(), rhs.begin());
   }
@@ -147,8 +158,8 @@ public:
   }
 
   friend std::ostream& operator<<(std::ostream& out, const bitset_view& bs_view) {
-    for (bitset_view::const_iterator it = bs_view.begin(); it != bs_view.end(); ++it) {
-      out << (*it);
+    for (auto el : bs_view) {
+      out << el;
     }
     return out;
   }
