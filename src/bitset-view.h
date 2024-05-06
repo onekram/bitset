@@ -70,36 +70,28 @@ public:
     return _end;
   }
 
-  bitset_view& operator&=(const bitset_view<const_reference>& other) {
+  bitset_view operator&=(const bitset_view<const_reference>& other) const {
     return operation(other, [](bool l, bool r) { return l && r; });
   }
 
-  bitset_view& operator|=(const bitset_view<const_reference>& other) {
+  bitset_view operator|=(const bitset_view<const_reference>& other) const {
     return operation(other, [](bool l, bool r) { return l || r; });
   }
 
-  bitset_view& operator^=(const bitset_view<const_reference>& other) {
+  bitset_view operator^=(const bitset_view<const_reference>& other) const {
     return operation(other, [](bool l, bool r) { return l ^ r; });
   }
 
-  bitset_view& operator>>=(std::size_t count) const {
-    if (size() >= count) {
-      _end -= count;
-    } else {
-      _end = begin();
-    }
+  bitset_view flip() const {
+    std::for_each(begin(), end(), [](reference el) { el.flip(); });
     return *this;
   }
 
-  void flip() {
-    std::for_each(begin(), end(), [](reference el) { el.flip(); });
-  }
-
-  bitset_view& set() {
+  bitset_view set() const {
     return set_bit(true);
   }
 
-  bitset_view& reset() {
+  bitset_view reset() const {
     return set_bit(false);
   }
 
@@ -113,17 +105,6 @@ public:
 
   std::size_t count() const {
     return std::count(begin(), end(), true);
-  }
-
-  bitset_view subview(std::size_t offset = 0, std::size_t count = npos) const {
-    if (offset > size()) {
-      return {end(), end()};
-    }
-    if (offset + count <= size() && count <= offset + count) {
-      return {begin() + offset, begin() + offset + count};
-    }
-
-    return {begin() + offset, end()};
   }
 
   friend bool operator==(const bitset_view& lhs, const bitset_view& rhs) {
@@ -157,12 +138,12 @@ private:
   iterator _begin;
   iterator _end;
 
-  bitset_view& set_bit(bool value) {
+  bitset_view set_bit(bool value) const {
     std::fill(begin(), end(), value);
     return *this;
   }
 
-  bitset_view& operation(const bitset_view<const_reference>& other, const std::function<bool(bool, bool)>& binary_op) {
+  bitset_view operation(const bitset_view<const_reference>& other, const std::function<bool(bool, bool)>& binary_op) const{
     assert(size() == other.size());
     std::transform(begin(), end(), other.begin(), begin(), binary_op);
     return *this;
