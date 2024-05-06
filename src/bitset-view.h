@@ -45,7 +45,7 @@ public:
 
   ~bitset_view() = default;
 
-  void swap(bitset_view& other) {
+  void swap(bitset_view& other) const {
     std::swap(_begin, other._begin);
     std::swap(_end, other._end);
   }
