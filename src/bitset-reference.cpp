@@ -1,7 +1,5 @@
 #include "bitset-reference.h"
 
-bitset_reference::bitset_reference() = default;
-
 bitset_reference::bitset_reference(const bitset_reference& other) = default;
 
 bitset_reference::~bitset_reference() = default;

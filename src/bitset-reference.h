@@ -11,7 +11,7 @@ public:
   using pointer = uint32_t*;
 
 public:
-  bitset_reference();
+  bitset_reference() = delete;
 
   bitset_reference(const bitset_reference& other);
 

@@ -58,24 +58,12 @@ public:
     return size() == 0;
   }
 
-  reference operator[](std::size_t index) {
-    return *(begin() + index);
-  }
-
   reference operator[](std::size_t index) const {
     return *(begin() + index);
   }
 
-  iterator begin() {
-    return _begin;
-  }
-
   iterator begin() const {
     return _begin;
-  }
-
-  iterator end() {
-    return _end;
   }
 
   iterator end() const {
@@ -94,7 +82,7 @@ public:
     return operation(other, [](bool l, bool r) { return l ^ r; });
   }
 
-  bitset_view& operator>>=(std::size_t count) {
+  bitset_view& operator>>=(std::size_t count) const {
     if (size() >= count) {
       _end -= count;
     } else {
@@ -125,17 +113,6 @@ public:
 
   std::size_t count() const {
     return std::count(begin(), end(), true);
-  }
-
-  bitset_view subview(std::size_t offset = 0, std::size_t count = npos) {
-    if (offset > size()) {
-      return {end(), end()};
-    }
-    if (offset + count <= size() && count <= offset + count) {
-      return {begin() + offset, begin() + offset + count};
-    }
-
-    return {begin() + offset, end()};
   }
 
   bitset_view subview(std::size_t offset = 0, std::size_t count = npos) const {
