@@ -130,8 +130,9 @@ bitset& bitset::operator>>=(std::size_t count) & {
   return *this;
 }
 
-void bitset::flip() & {
+bitset& bitset::flip() & {
   std::for_each(begin(), end(), [](reference el) { el.flip(); });
+  return *this;
 }
 
 bitset& bitset::set() & {

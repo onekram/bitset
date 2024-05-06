@@ -17,7 +17,7 @@ bitset_reference::operator bool() const {
   return (*_p & get_mask()) != 0;
 }
 
-bitset_reference& bitset_reference::flip() {
+bitset_reference bitset_reference::flip() const {
   *_p ^= get_mask();
   return *this;
 }

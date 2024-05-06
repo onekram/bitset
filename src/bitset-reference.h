@@ -21,7 +21,7 @@ public:
 
   operator bool() const;
 
-  bitset_reference& flip();
+  bitset_reference flip() const;
 
 private:
   pointer _p;

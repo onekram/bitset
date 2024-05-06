@@ -57,7 +57,7 @@ public:
   bitset& operator^=(const const_view& other) &;
   bitset& operator<<=(std::size_t count) &;
   bitset& operator>>=(std::size_t count) &;
-  void flip() &;
+  bitset& flip() &;
 
   bitset& set() &;
   bitset& reset() &;
