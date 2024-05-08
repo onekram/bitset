@@ -225,14 +225,6 @@ bitset::bitset(const_iterator first, const_iterator last, std::size_t size)
   }
 }
 
-bool operator==(const bitset& left, const bitset& right) {
-  return left.size() == right.size() && std::equal(left.begin(), left.end(), right.begin());
-}
-
-bool operator!=(const bitset& left, const bitset& right) {
-  return !(left == right);
-}
-
 bool operator==(const bitset::const_view& lhs, const bitset::const_view& rhs) {
   return lhs.size() == rhs.size() && std::equal(lhs.begin(), lhs.end(), rhs.begin());
 }
@@ -274,7 +266,7 @@ bitset operator>>(const bitset::const_view& bs_view, std::size_t count) {
   return bs;
 }
 
-std::ostream& operator<<(std::ostream& out, const bitset& bs) {
+std::ostream& operator<<(std::ostream& out, const bitset::const_view bs) {
   for (auto el : bs) {
     out << el;
   }

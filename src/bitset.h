@@ -88,9 +88,6 @@ private:
   static std::size_t get_capacity(std::size_t size);
 };
 
-bool operator==(const bitset& left, const bitset& right);
-bool operator!=(const bitset& left, const bitset& right);
-
 bool operator==(const bitset::const_view& lhs, const bitset::const_view& rhs);
 bool operator!=(const bitset::const_view& lhs, const bitset::const_view& rhs);
 
@@ -101,7 +98,7 @@ bitset operator~(const bitset::const_view& bs_view);
 bitset operator<<(const bitset::const_view& bs_view, std::size_t count);
 bitset operator>>(const bitset::const_view& bs_view, std::size_t count);
 
-std::ostream& operator<<(std::ostream& out, const bitset& bs);
+std::ostream& operator<<(std::ostream& out, const bitset::const_view bs);
 
 std::string to_string(const bitset& bs);
 

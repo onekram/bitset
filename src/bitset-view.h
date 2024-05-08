@@ -43,7 +43,7 @@ public:
 
   ~bitset_view() = default;
 
-  void swap(bitset_view& other) {
+  void swap(bitset_view<const_reference> other) {
     std::swap(_begin, other._begin);
     std::swap(_end, other._end);
   }
@@ -103,13 +103,6 @@ public:
 
   std::size_t count() const {
     return std::count(begin(), end(), true);
-  }
-
-  friend std::ostream& operator<<(std::ostream& out, const bitset_view& bs_view) {
-    for (auto el : bs_view) {
-      out << el;
-    }
-    return out;
   }
 
   friend std::string to_string(const bitset_view& bs_view) {
