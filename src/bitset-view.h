@@ -19,8 +19,6 @@ public:
   using iterator = bitset_iterator<reference>;
   using const_iterator = bitset_iterator<const_reference>;
 
-  static constexpr std::size_t npos = -1;
-
 public:
   bitset_view() = default;
 
@@ -45,7 +43,7 @@ public:
 
   ~bitset_view() = default;
 
-  void swap(bitset_view& other) const {
+  void swap(bitset_view& other) {
     std::swap(_begin, other._begin);
     std::swap(_end, other._end);
   }
@@ -105,14 +103,6 @@ public:
 
   std::size_t count() const {
     return std::count(begin(), end(), true);
-  }
-
-  friend bool operator==(const bitset_view& lhs, const bitset_view& rhs) {
-    return lhs.size() == rhs.size() && std::equal(lhs.begin(), lhs.end(), rhs.begin());
-  }
-
-  friend bool operator!=(const bitset_view& lhs, const bitset_view& rhs) {
-    return !(lhs == rhs);
   }
 
   friend std::ostream& operator<<(std::ostream& out, const bitset_view& bs_view) {

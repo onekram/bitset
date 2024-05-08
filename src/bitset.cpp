@@ -233,6 +233,14 @@ bool operator!=(const bitset& left, const bitset& right) {
   return !(left == right);
 }
 
+bool operator==(const bitset::const_view& lhs, const bitset::const_view& rhs) {
+  return lhs.size() == rhs.size() && std::equal(lhs.begin(), lhs.end(), rhs.begin());
+}
+
+bool operator!=(const bitset::const_view& lhs, const bitset::const_view& rhs) {
+  return !(lhs == rhs);
+}
+
 bitset operator&(const bitset::const_view& left, const bitset::const_view& right) {
   bitset bs(left);
   return bs &= right;

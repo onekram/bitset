@@ -91,6 +91,9 @@ private:
 bool operator==(const bitset& left, const bitset& right);
 bool operator!=(const bitset& left, const bitset& right);
 
+bool operator==(const bitset::const_view& lhs, const bitset::const_view& rhs);
+bool operator!=(const bitset::const_view& lhs, const bitset::const_view& rhs);
+
 bitset operator&(const bitset::const_view& left, const bitset::const_view& right);
 bitset operator|(const bitset::const_view& left, const bitset::const_view& right);
 bitset operator^(const bitset::const_view& left, const bitset::const_view& right);
