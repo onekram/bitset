@@ -3,33 +3,60 @@
 #include <cstddef>
 #include <cstdint>
 
+template <typename T>
 class bitset_reference {
-  template <typename S>
-  friend class bitset_iterator;
-
 public:
-  using pointer = uint32_t*;
+  using pointer = T*;
+  using word_type = uint32_t;
 
 public:
   bitset_reference() = delete;
 
-  bitset_reference(const bitset_reference& other);
+  bitset_reference(const bitset_reference& other) = default;
 
-  ~bitset_reference();
+  ~bitset_reference() = default;
 
-  bitset_reference& operator=(bool value);
+  bitset_reference& operator=(bool value) {
+    if (value) {
+      *_p |= get_mask();
+    } else {
+      *_p &= ~get_mask();
+    }
+    return *this;
+  }
 
-  const bitset_reference& operator=(bool value) const;
+  const bitset_reference& operator=(bool value) const {
+    if (value) {
+      *_p |= get_mask();
+    } else {
+      *_p &= ~get_mask();
+    }
+    return *this;
+  }
 
-  operator bool() const;
+  operator bool() const {
+    return (*_p & get_mask()) != 0;
+  }
 
-  bitset_reference flip() const;
+  operator bitset_reference<const uint32_t>() const {
+    return {_p, _index};
+  }
+
+  bitset_reference flip() const {
+    *_p ^= get_mask();
+    return *this;
+  }
+
+  bitset_reference(pointer p, std::size_t index)
+      : _p(p)
+      , _index(index) {}
 
 private:
   pointer _p;
   std::size_t _index;
 
-  uint32_t get_mask() const;
-
-  bitset_reference(pointer p, std::size_t index);
+  uint32_t get_mask() const {
+    uint32_t ONE = 1;
+    return ONE << _index;
+  }
 };

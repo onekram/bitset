@@ -12,6 +12,7 @@ public:
   using difference_type = std::ptrdiff_t;
   using pointer = void;
   using reference = T;
+  using const_reference = bitset_reference<const uint32_t>;
   using iterator_category = std::random_access_iterator_tag;
 
 public:
@@ -25,7 +26,7 @@ public:
       : _cur(cur)
       , _index(index) {}
 
-  operator bitset_iterator<bool>() const {
+  operator bitset_iterator<const_reference>() const {
     return {_cur, _index};
   }
 

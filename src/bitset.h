@@ -12,8 +12,8 @@ class bitset {
 public:
   using value_type = bool;
 
-  using reference = bitset_reference;
-  using const_reference = bool;
+  using reference = bitset_reference<uint32_t>;
+  using const_reference = bitset_reference<const uint32_t>;
 
   using iterator = bitset_iterator<reference>;
   using const_iterator = bitset_iterator<const_reference>;

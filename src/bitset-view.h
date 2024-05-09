@@ -14,7 +14,7 @@ public:
   using value_type = bool;
 
   using reference = T;
-  using const_reference = bool;
+  using const_reference = bitset_reference<const uint32_t>;
 
   using iterator = bitset_iterator<reference>;
   using const_iterator = bitset_iterator<const_reference>;
