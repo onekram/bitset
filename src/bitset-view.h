@@ -43,7 +43,7 @@ public:
 
   ~bitset_view() = default;
 
-  void swap(bitset_view<const_reference> other) {
+  void swap(bitset_view& other) {
     std::swap(_begin, other._begin);
     std::swap(_end, other._end);
   }
@@ -105,16 +105,16 @@ public:
     return std::count(begin(), end(), true);
   }
 
+  friend void swap(bitset_view& lhs, bitset_view& rhs) {
+    lhs.swap(rhs);
+  }
+
   friend std::string to_string(const bitset_view& bs_view) {
     std::stringstream ss;
     for (auto b : bs_view) {
       ss << b;
     }
     return ss.str();
-  }
-
-  friend void swap(bitset_view& lhs, bitset_view& rhs) {
-    lhs.swap(rhs);
   }
 
 private:
