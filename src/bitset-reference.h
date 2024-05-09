@@ -19,6 +19,8 @@ public:
 
   bitset_reference& operator=(bool value);
 
+  const bitset_reference& operator=(bool value) const;
+
   operator bool() const;
 
   bitset_reference flip() const;

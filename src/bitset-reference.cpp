@@ -13,6 +13,15 @@ bitset_reference& bitset_reference::operator=(bool value) {
   return *this;
 }
 
+const bitset_reference& bitset_reference::operator=(bool value) const {
+  if (value) {
+    *_p |= get_mask();
+  } else {
+    *_p &= ~get_mask();
+  }
+  return *this;
+}
+
 bitset_reference::operator bool() const {
   return (*_p & get_mask()) != 0;
 }
