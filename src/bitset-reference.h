@@ -14,6 +14,8 @@ public:
 
   bitset_reference(const bitset_reference& other) = default;
 
+  bitset_reference& operator=(const bitset_reference& other) = default;
+
   ~bitset_reference() = default;
 
   bitset_reference& operator=(bool value) {

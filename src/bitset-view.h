@@ -26,22 +26,15 @@ public:
       : _begin(first)
       , _end(last) {}
 
-  bitset_view(const bitset_view& other)
-      : bitset_view(other.begin(), other.end()) {}
+  bitset_view(const bitset_view& other) = default;
+
+  bitset_view& operator=(const bitset_view& other) = default;
+
+  ~bitset_view() = default;
 
   operator bitset_view<const_reference>() const {
     return {begin(), end()};
   }
-
-  bitset_view& operator=(const bitset_view& other) {
-    if (this != &other) {
-      _begin = other._begin;
-      _end = other._end;
-    }
-    return *this;
-  }
-
-  ~bitset_view() = default;
 
   void swap(bitset_view& other) {
     std::swap(_begin, other._begin);
