@@ -19,6 +19,8 @@ public:
   using iterator = bitset_iterator<reference>;
   using const_iterator = bitset_iterator<const_reference>;
 
+  static constexpr std::size_t npos = -1;
+
 public:
   bitset_view() = default;
 
@@ -108,6 +110,17 @@ public:
       ss << b;
     }
     return ss.str();
+  }
+
+  bitset_view subview(std::size_t offset = 0, std::size_t count = npos) const {
+    if (offset > size()) {
+      return {end(), end()};
+    }
+    if (offset + count <= size() && count <= offset + count) {
+      return {begin() + offset, begin() + offset + count};
+    }
+
+    return {begin() + offset, end()};
   }
 
 private:

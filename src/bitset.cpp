@@ -266,7 +266,7 @@ bitset operator>>(const bitset::const_view& bs_view, std::size_t count) {
   return bs;
 }
 
-std::ostream& operator<<(std::ostream& out, const bitset::const_view bs) {
+std::ostream& operator<<(std::ostream& out, const bitset::const_view& bs) {
   for (auto el : bs) {
     out << el;
   }
