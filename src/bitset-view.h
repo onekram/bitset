@@ -19,6 +19,11 @@ public:
   using iterator = bitset_iterator<reference>;
   using const_iterator = bitset_iterator<const_reference>;
 
+  using view = bitset_view<reference>;
+  using const_view = bitset_view<const_reference>;
+
+  using word_type = uint32_t;
+
   static constexpr std::size_t npos = -1;
 
 public:
