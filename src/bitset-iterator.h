@@ -19,6 +19,7 @@ public:
   bitset_iterator() = default;
 
   bitset_iterator(const bitset_iterator& other) = default;
+
   bitset_iterator& operator=(const bitset_iterator& other) = default;
 
   ~bitset_iterator() = default;
