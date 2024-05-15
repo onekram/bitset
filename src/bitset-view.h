@@ -12,17 +12,16 @@ template <typename T>
 class bitset_view {
 public:
   using value_type = bool;
+  using word_type = uint32_t;
 
   using reference = T;
-  using const_reference = bitset_reference<const uint32_t>;
+  using const_reference = bitset_reference<const word_type>;
 
   using iterator = bitset_iterator<reference>;
   using const_iterator = bitset_iterator<const_reference>;
 
   using view = bitset_view<reference>;
   using const_view = bitset_view<const_reference>;
-
-  using word_type = uint32_t;
 
   static constexpr std::size_t npos = -1;
 

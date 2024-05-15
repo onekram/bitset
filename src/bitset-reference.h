@@ -7,6 +7,7 @@ template <typename T>
 class bitset_reference {
 public:
   using pointer = T*;
+
   using word_type = uint32_t;
 
 public:
