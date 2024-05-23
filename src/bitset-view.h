@@ -67,15 +67,15 @@ public:
     return _end;
   }
 
-  bitset_view operator&=(const bitset_view<const_reference>& other) const {
+  bitset_view operator&=(const const_view& other) const {
     return operation(other, [](bool l, bool r) { return l && r; });
   }
 
-  bitset_view operator|=(const bitset_view<const_reference>& other) const {
+  bitset_view operator|=(const const_view& other) const {
     return operation(other, [](bool l, bool r) { return l || r; });
   }
 
-  bitset_view operator^=(const bitset_view<const_reference>& other) const {
+  bitset_view operator^=(const const_view& other) const {
     return operation(other, [](bool l, bool r) { return l ^ r; });
   }
 
