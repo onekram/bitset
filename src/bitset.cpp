@@ -35,7 +35,7 @@ bitset::bitset(std::string_view str)
     , _data(nullptr) {
   if (_capacity > 0) {
     _data = new uint32_t[_capacity]{};
-    std::generate(begin(), end(), [oit = str.begin()]() mutable { return *(oit++) == '1'; });
+    std::transform(str.begin(), str.end(), begin(), [](char c) { return c == '1'; });
   }
 }
 
