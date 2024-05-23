@@ -16,10 +16,8 @@ bitset::bitset(std::size_t size, bool value)
     , _capacity(get_capacity(size))
     , _data(nullptr) {
   if (_capacity > 0) {
-    _data = new uint32_t[_capacity]{};
-    if (value) {
-      set_bit(value);
-    }
+    _data = new uint32_t[_capacity];
+    set_bit(value);
   }
 }
 
@@ -27,14 +25,14 @@ bitset::bitset(const bitset& other)
     : bitset(other.begin(), other.end()) {}
 
 bitset::bitset(const_iterator first, const_iterator last)
-    : bitset(first, last, last - first) {}
+    : bitset(first, last, 0) {}
 
 bitset::bitset(std::string_view str)
     : _size(str.size())
     , _capacity(get_capacity(_size))
     , _data(nullptr) {
   if (_capacity > 0) {
-    _data = new uint32_t[_capacity]{};
+    _data = new uint32_t[_capacity];
     std::transform(str.begin(), str.end(), begin(), [](char c) { return c == '1'; });
   }
 }
@@ -112,7 +110,7 @@ bitset& bitset::operator^=(const const_view& other) & {
 
 bitset& bitset::operator<<=(std::size_t count) & {
   if (get_capacity(size() + count) > _capacity) {
-    bitset bs(begin(), end(), size() + count);
+    bitset bs(begin(), end(), count);
     swap(bs);
     return *this;
   }
@@ -210,18 +208,14 @@ bitset::const_view bitset::subview(std::size_t offset, std::size_t count) const 
   return {begin() + offset, end()};
 }
 
-bitset::bitset(const_iterator first, const_iterator last, std::size_t size)
-    : _size(size)
-    , _capacity(get_capacity(size))
+bitset::bitset(const_iterator first, const_iterator last, std::size_t extra_size)
+    : _size(last - first + extra_size)
+    , _capacity(get_capacity(_size))
     , _data(nullptr) {
   if (_capacity > 0) {
-    _data = new uint32_t[_capacity]{};
-    std::generate(begin(), end(), [oit = first, &last]() mutable -> bool {
-      if (oit >= last) {
-        return false;
-      }
-      return *(oit++);
-    });
+    _data = new uint32_t[_capacity];
+    std::transform(first, last, begin(), std::identity());
+    set_bit(end() - extra_size, end(), false);
   }
 }
 

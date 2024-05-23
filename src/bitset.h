@@ -77,7 +77,7 @@ private:
   size_t _capacity;
   word_type* _data;
 
-  bitset(const_iterator first, const_iterator last, std::size_t size);
+  bitset(const_iterator first, const_iterator last, std::size_t extra_size);
 
   bitset& set_bit(bool value);
   bitset& set_bit(const iterator& first, const iterator& last, bool value);
