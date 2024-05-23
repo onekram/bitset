@@ -7,18 +7,11 @@
 #include <sstream>
 
 bitset::bitset()
-    : _size(0)
-    , _capacity(0)
-    , _data(nullptr) {}
+    : bitset(0) {}
 
 bitset::bitset(std::size_t size, bool value)
-    : _size(size)
-    , _capacity(get_capacity(size))
-    , _data(nullptr) {
-  if (_capacity > 0) {
-    _data = new uint32_t[_capacity];
-    set_bit(value);
-  }
+    : bitset(size) {
+  set_bit(value);
 }
 
 bitset::bitset(const bitset& other)
@@ -28,13 +21,8 @@ bitset::bitset(const_iterator first, const_iterator last)
     : bitset(first, last, 0) {}
 
 bitset::bitset(std::string_view str)
-    : _size(str.size())
-    , _capacity(get_capacity(_size))
-    , _data(nullptr) {
-  if (_capacity > 0) {
-    _data = new uint32_t[_capacity];
-    std::transform(str.begin(), str.end(), begin(), [](char c) { return c == '1'; });
-  }
+    : bitset(str.size()) {
+  std::transform(str.begin(), str.end(), begin(), [](char c) { return c == '1'; });
 }
 
 bitset::bitset(const const_view& other)
@@ -209,13 +197,17 @@ bitset::const_view bitset::subview(std::size_t offset, std::size_t count) const 
 }
 
 bitset::bitset(const_iterator first, const_iterator last, std::size_t extra_size)
-    : _size(last - first + extra_size)
+    : bitset(last - first + extra_size) {
+  std::transform(first, last, begin(), std::identity());
+  set_bit(end() - extra_size, end(), false);
+}
+
+bitset::bitset(std::size_t size)
+    : _size(size)
     , _capacity(get_capacity(_size))
     , _data(nullptr) {
   if (_capacity > 0) {
     _data = new uint32_t[_capacity];
-    std::transform(first, last, begin(), std::identity());
-    set_bit(end() - extra_size, end(), false);
   }
 }
 

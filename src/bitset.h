@@ -79,6 +79,8 @@ private:
 
   bitset(const_iterator first, const_iterator last, std::size_t extra_size);
 
+  explicit bitset(std::size_t size);
+
   bitset& set_bit(bool value);
   bitset& set_bit(const iterator& first, const iterator& last, bool value);
 
