@@ -75,11 +75,11 @@ bool bitset::empty() const {
 }
 
 bitset::reference bitset::operator[](std::size_t index) {
-  return *(begin() + index);
+  return begin()[index];
 }
 
 bitset::const_reference bitset::operator[](std::size_t index) const {
-  return *(begin() + index);
+  return begin()[index];
 }
 
 bitset::iterator bitset::begin() {
