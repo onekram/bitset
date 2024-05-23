@@ -108,14 +108,6 @@ public:
     lhs.swap(rhs);
   }
 
-  friend std::string to_string(const bitset_view& bs_view) {
-    std::stringstream ss;
-    for (auto b : bs_view) {
-      ss << b;
-    }
-    return ss.str();
-  }
-
   bitset_view subview(std::size_t offset = 0, std::size_t count = npos) const {
     if (offset > size()) {
       return {end(), end()};
