@@ -235,17 +235,20 @@ bool operator!=(const bitset::const_view& lhs, const bitset::const_view& rhs) {
 
 bitset operator&(const bitset::const_view& left, const bitset::const_view& right) {
   bitset bs(left);
-  return bs &= right;
+  bs &= right;
+  return bs;
 }
 
 bitset operator|(const bitset::const_view& left, const bitset::const_view& right) {
   bitset bs(left);
-  return bs |= right;
+  bs |= right;
+  return bs;
 }
 
 bitset operator^(const bitset::const_view& left, const bitset::const_view& right) {
   bitset bs(left);
-  return bs ^= right;
+  bs ^= right;
+  return bs;
 }
 
 bitset operator~(const bitset::const_view& bs_view) {
