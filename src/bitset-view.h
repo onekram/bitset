@@ -93,11 +93,11 @@ public:
   }
 
   bool all() const {
-    return std::all_of(begin(), end(), [](bool el) { return el; });
+    return std::all_of(begin(), end(), std::identity());
   }
 
   bool any() const {
-    return std::any_of(begin(), end(), [](bool el) { return el; });
+    return std::any_of(begin(), end(), std::identity());
   }
 
   std::size_t count() const {
