@@ -100,6 +100,6 @@ bitset operator>>(const bitset::const_view& bs_view, std::size_t count);
 
 std::ostream& operator<<(std::ostream& out, const bitset::const_view& bs);
 
-std::string to_string(const bitset& bs);
+std::string to_string(const bitset::const_view& bs_view);
 
 void swap(bitset& lhs, bitset& rhs);

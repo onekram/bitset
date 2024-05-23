@@ -270,12 +270,13 @@ std::ostream& operator<<(std::ostream& out, const bitset::const_view& bs) {
   return out;
 }
 
-std::string to_string(const bitset& bs) {
-  std::stringstream ss;
-  for (auto b : bs) {
-    ss << b;
+std::string to_string(const bitset::const_view& bs_view) {
+  std::string s;
+  s.reserve(bs_view.size());
+  for (auto el : bs_view) {
+    s.push_back('0' + el);
   }
-  return ss.str();
+  return s;
 }
 
 void swap(bitset& lhs, bitset& rhs) {
