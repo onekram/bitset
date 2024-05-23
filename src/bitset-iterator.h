@@ -119,10 +119,6 @@ public:
     return rhs + lhs;
   }
 
-  friend bitset_iterator operator-(difference_type lhs, const bitset_iterator& rhs) {
-    return rhs - lhs;
-  }
-
   friend difference_type operator-(const bitset_iterator& lhs, const bitset_iterator& rhs) {
     return static_cast<difference_type>(lhs._index - rhs._index);
   }
