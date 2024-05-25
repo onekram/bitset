@@ -10,6 +10,8 @@ class bitset_iterator {
   template <typename S>
   friend class bitset_view;
 
+  friend class bitset;
+
 public:
   using value_type = bool;
   using word_type = uint64_t;
@@ -22,6 +24,8 @@ public:
 
   using iterator_category = std::random_access_iterator_tag;
 
+  friend class bitset_iterator<bitset_reference<word_type>>;
+
 public:
   bitset_iterator() = default;
 
@@ -30,10 +34,6 @@ public:
   bitset_iterator& operator=(const bitset_iterator& other) = default;
 
   ~bitset_iterator() = default;
-
-  bitset_iterator(word_type* cur, std::size_t index)
-      : _cur(cur)
-      , _index(index) {}
 
   operator bitset_iterator<const_reference>() const {
     return {_cur, _index};
@@ -130,4 +130,8 @@ private:
   word_type* _cur;
   std::size_t _index;
   static const std::size_t INT_SIZE = std::numeric_limits<word_type>::digits;
+
+  bitset_iterator(word_type* cur, std::size_t index)
+      : _cur(cur)
+      , _index(index) {}
 };
