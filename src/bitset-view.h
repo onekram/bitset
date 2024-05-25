@@ -12,7 +12,7 @@ template <typename T>
 class bitset_view {
 public:
   using value_type = bool;
-  using word_type = uint32_t;
+  using word_type = uint64_t;
 
   using reference = T;
   using const_reference = bitset_reference<const word_type>;

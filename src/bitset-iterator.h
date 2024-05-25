@@ -12,7 +12,7 @@ class bitset_iterator {
 
 public:
   using value_type = bool;
-  using word_type = uint32_t;
+  using word_type = uint64_t;
 
   using difference_type = std::ptrdiff_t;
   using pointer = void;

@@ -9,7 +9,7 @@ class bitset_reference {
 public:
   using pointer = T*;
 
-  using word_type = uint32_t;
+  using word_type = uint64_t;
 
 public:
   bitset_reference() = delete;
