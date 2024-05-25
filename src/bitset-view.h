@@ -147,11 +147,16 @@ private:
     });
     return *this;
   }
+  static constexpr std::uint64_t n1 = 0x5555555555555555;
+  static constexpr std::uint64_t n2 = 0x3333333333333333;
+  static constexpr std::uint64_t n3 = 0xF0F0F0F0F0F0F0F;
+  static constexpr std::uint64_t n4 = 0x101010101010101;
+  static constexpr std::uint64_t n5 = 56;
 
   static std::size_t count_bits(word_type num) {
-    num -= ((num >> 1) & 0x5555555555555555);
-    num = (num & 0x3333333333333333) + ((num >> 2) & 0x3333333333333333);
-    return (((num + (num >> 4)) & 0xF0F0F0F0F0F0F0F) * 0x101010101010101) >> 56;
+    num -= ((num >> 1) & n1);
+    num = (num & n2) + ((num >> 2) & n2);
+    return (((num + (num >> 4)) & n3) * n4) >> n5;
   }
 
   static word_type first_bits(word_type num, std::size_t count) {
