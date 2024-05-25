@@ -111,11 +111,17 @@ bitset& bitset::operator<<=(std::size_t count) & {
 }
 
 bitset& bitset::operator>>=(std::size_t count) & {
-  if (size() >= count) {
-    _size -= count;
-  } else {
-    _size = 0;
+  if (count >= size()) {
+    bitset bs;
+    swap(bs);
+    return *this;
   }
+  if (get_capacity(size() - count) < _capacity) {
+    bitset bs(begin(), end() - count);
+    swap(bs);
+    return *this;
+  }
+  _size -= count;
   return *this;
 }
 
