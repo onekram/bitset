@@ -6,13 +6,14 @@
 #include <cstddef>
 #include <cstdint>
 #include <functional>
+#include <limits>
 #include <string_view>
 
 class bitset {
 public:
   using value_type = bool;
 
-  using word_type = uint8_t;
+  using word_type = uint32_t;
 
   using reference = bitset_reference<word_type>;
   using const_reference = bitset_reference<const word_type>;
@@ -84,7 +85,7 @@ private:
   bitset& set_bit(bool value);
   bitset& set_bit(const iterator& first, const iterator& last, bool value);
 
-  static const std::size_t INT_SIZE = sizeof(word_type) * 8;
+  static const std::size_t INT_SIZE = std::numeric_limits<word_type>::digits;
 
   static std::size_t get_capacity(std::size_t size);
 };

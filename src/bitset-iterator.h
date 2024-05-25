@@ -12,7 +12,7 @@ class bitset_iterator {
 
 public:
   using value_type = bool;
-  using word_type = uint8_t;
+  using word_type = uint32_t;
 
   using difference_type = std::ptrdiff_t;
   using pointer = void;
@@ -42,11 +42,11 @@ public:
   // Element access
 
   reference operator*() const {
-    return bitset_reference(_cur + _index / INT_BITS, _index % INT_BITS);
+    return bitset_reference(_cur + _index / INT_SIZE, _index % INT_SIZE);
   }
 
   reference operator[](difference_type n) const {
-    return bitset_reference(_cur + (_index + n) / INT_BITS, (_index + n) % INT_BITS);
+    return bitset_reference(_cur + (_index + n) / INT_SIZE, (_index + n) % INT_SIZE);
   }
 
   // Comparison
@@ -129,5 +129,5 @@ public:
 private:
   word_type* _cur;
   std::size_t _index;
-  static const std::size_t INT_BITS = sizeof(word_type) * 8;
+  static const std::size_t INT_SIZE = std::numeric_limits<word_type>::digits;
 };

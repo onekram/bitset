@@ -12,7 +12,7 @@ template <typename T>
 class bitset_view {
 public:
   using value_type = bool;
-  using word_type = uint8_t;
+  using word_type = uint32_t;
 
   using reference = T;
   using const_reference = bitset_reference<const word_type>;
@@ -123,7 +123,7 @@ private:
   iterator _begin;
   iterator _end;
 
-  static const std::size_t INT_BITS = sizeof(word_type) * 8;
+  static const std::size_t INT_SIZE = std::numeric_limits<word_type>::digits;
   static constexpr word_type ALL_ONE = -1;
 
   bitset_view set_bit(bool value) const {
@@ -135,15 +135,15 @@ private:
     if (count == 0) {
       return 0;
     }
-    if (count == INT_BITS) {
+    if (count == INT_SIZE) {
       return num;
     }
-    return num & (ALL_ONE >> (INT_BITS - count));
+    return num & (ALL_ONE >> (INT_SIZE - count));
   }
 
   static word_type sub_bits(word_type num, std::size_t offset, std::size_t count) {
-    word_type res = first_bits(num, INT_BITS - offset);
-    res >>= (INT_BITS - offset - count);
+    word_type res = first_bits(num, INT_SIZE - offset);
+    res >>= (INT_SIZE - offset - count);
     return res;
   }
 
@@ -151,21 +151,21 @@ private:
     if (count == 0) {
       return 0;
     }
-    return ALL_ONE >> (INT_BITS - count);
+    return ALL_ONE >> (INT_SIZE - count);
   }
 
   static void clear_bits(word_type& num, std::size_t offset, std::size_t count) {
-    word_type mask = mask_ones(count) << (INT_BITS - offset - count);
+    word_type mask = mask_ones(count) << (INT_SIZE - offset - count);
     num &= ~mask;
   }
 
   static void apply_bits(word_type& num, std::size_t offset, std::size_t count, word_type source) {
     clear_bits(num, offset, count);
-    num |= source << (INT_BITS - offset - count);
+    num |= source << (INT_SIZE - offset - count);
   }
 
   static word_type& get_element(word_type* data, std::size_t idx) {
-    return data[idx / INT_BITS];
+    return data[idx / INT_SIZE];
   }
 
   template <class Function>
@@ -180,13 +180,13 @@ private:
 
     while (idx < border) {
       std::size_t c = border - idx;
-      std::size_t i = idx % INT_BITS;
-      std::size_t j = other_idx % INT_BITS;
+      std::size_t i = idx % INT_SIZE;
+      std::size_t j = other_idx % INT_SIZE;
 
       if (i <= j) {
-        c = std::min(c, INT_BITS - j);
+        c = std::min(c, INT_SIZE - j);
       } else {
-        c = std::min(c, INT_BITS - i);
+        c = std::min(c, INT_SIZE - i);
       }
 
       word_type source = sub_bits(get_element(other_data, other_idx), j, c);
