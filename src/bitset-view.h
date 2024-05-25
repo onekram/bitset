@@ -68,15 +68,15 @@ public:
   }
 
   bitset_view operator&=(const const_view& other) const {
-    return apply_binary(other, [](word_type l, word_type r) { return l & r; });
+    return operation(other, [](word_type lhs, word_type rhs) { return lhs & rhs; });
   }
 
   bitset_view operator|=(const const_view& other) const {
-    return apply_binary(other, [](word_type l, word_type r) { return l | r; });
+    return operation(other, [](word_type lhs, word_type rhs) { return lhs | rhs; });
   }
 
   bitset_view operator^=(const const_view& other) const {
-    return apply_binary(other, [](word_type l, word_type r) { return l ^ r; });
+    return operation(other, [](word_type lhs, word_type rhs) { return lhs ^ rhs; });
   }
 
   bitset_view flip() const {
@@ -132,6 +132,8 @@ public:
     return {begin() + offset, end()};
   }
 
+  friend bool operator==(const const_view& lhs, const const_view& rhs);
+
 private:
   iterator _begin;
   iterator _end;
@@ -147,6 +149,7 @@ private:
     });
     return *this;
   }
+
   static constexpr std::uint64_t n1 = 0x5555555555555555;
   static constexpr std::uint64_t n2 = 0x3333333333333333;
   static constexpr std::uint64_t n3 = 0xF0F0F0F0F0F0F0F;
@@ -205,7 +208,7 @@ private:
   }
 
   template <class Function>
-  bitset_view apply_binary(const const_view& other, Function binary_op) const {
+  bool apply_binary(const const_view& other, Function binary_op) const {
     assert(size() == other.size());
 
     word_type* data = begin()._cur;
@@ -228,13 +231,14 @@ private:
       word_type& cur = get_element(data, idx);
       word_type other_cur = get_element(other_data, other_idx);
       word_type source = sub_bits(other_cur, j, count);
-      word_type des = sub_bits(cur, i, count);
-      apply_bits(cur, i, count, binary_op(des, source));
 
+      if (!binary_op(cur, i, count, source)) {
+        return false;
+      }
       idx += count;
       other_idx += count;
     }
-    return *this;
+    return true;
   }
 
   template <class Function>
@@ -255,5 +259,15 @@ private:
       idx += count;
     }
     return true;
+  }
+
+  template <class Function>
+  bitset_view operation(const const_view& other, Function binary_op) const {
+    apply_binary(other, [&binary_op](word_type& num, std::size_t offset, std::size_t count, word_type source) {
+      word_type des = sub_bits(num, offset, count);
+      apply_bits(num, offset, count, binary_op(des, source));
+      return true;
+    });
+    return *this;
   }
 };
