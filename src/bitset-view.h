@@ -56,7 +56,7 @@ public:
   }
 
   reference operator[](std::size_t index) const {
-    return *(begin() + index);
+    return begin()[index];
   }
 
   iterator begin() const {
@@ -68,40 +68,53 @@ public:
   }
 
   bitset_view operator&=(const const_view& other) const {
-    return operation(other, [](word_type l, word_type r) { return l & r; });
+    return apply_binary(other, [](word_type l, word_type r) { return l & r; });
   }
 
   bitset_view operator|=(const const_view& other) const {
-    return operation(other, [](word_type l, word_type r) { return l | r; });
+    return apply_binary(other, [](word_type l, word_type r) { return l | r; });
   }
 
   bitset_view operator^=(const const_view& other) const {
-    return operation(other, [](word_type l, word_type r) { return l ^ r; });
+    return apply_binary(other, [](word_type l, word_type r) { return l ^ r; });
   }
 
   bitset_view flip() const {
-    std::for_each(begin(), end(), [](reference el) { el.flip(); });
+    apply_unary([](word_type& num, std::size_t offset, std::size_t count) {
+      word_type des = sub_bits(num, offset, count);
+      apply_bits(num, offset, count, ~des);
+      return true;
+    });
     return *this;
   }
 
   bitset_view set() const {
-    return set_bit(true);
+    return set_bits(true);
   }
 
   bitset_view reset() const {
-    return set_bit(false);
+    return set_bits(false);
   }
 
   bool all() const {
-    return std::all_of(begin(), end(), std::identity());
+    return apply_unary([](word_type num, std::size_t offset, std::size_t count) {
+      return count_bits(sub_bits(num, offset, count)) == count;
+    });
   }
 
   bool any() const {
-    return std::any_of(begin(), end(), std::identity());
+    return !apply_unary([](word_type num, std::size_t offset, std::size_t count) {
+      return count_bits(sub_bits(num, offset, count)) == 0;
+    });
   }
 
   std::size_t count() const {
-    return std::count(begin(), end(), true);
+    std::size_t c = 0;
+    apply_unary([&c](word_type num, std::size_t offset, std::size_t count) {
+      c += count_bits(sub_bits(num, offset, count));
+      return true;
+    });
+    return c;
   }
 
   friend void swap(bitset_view& lhs, bitset_view& rhs) {
@@ -126,9 +139,19 @@ private:
   static const std::size_t INT_SIZE = std::numeric_limits<word_type>::digits;
   static constexpr word_type ALL_ONE = -1;
 
-  bitset_view set_bit(bool value) const {
-    std::fill(begin(), end(), value);
+  bitset_view set_bits(bool value) const {
+    word_type mask = value ? mask_ones(INT_SIZE) : 0;
+    apply_unary([mask](word_type& num, std::size_t offset, std::size_t count) {
+      apply_bits(num, offset, count, first_bits(mask, count));
+      return true;
+    });
     return *this;
+  }
+
+  static std::size_t count_bits(word_type num) {
+    num -= ((num >> 1) & 0x5555555555555555);
+    num = (num & 0x3333333333333333) + ((num >> 2) & 0x3333333333333333);
+    return (((num + (num >> 4)) & 0xF0F0F0F0F0F0F0F) * 0x101010101010101) >> 56;
   }
 
   static word_type first_bits(word_type num, std::size_t count) {
@@ -155,13 +178,21 @@ private:
   }
 
   static void clear_bits(word_type& num, std::size_t offset, std::size_t count) {
-    word_type mask = mask_ones(count) << (INT_SIZE - offset - count);
-    num &= ~mask;
+    if (offset == 0 && count == INT_SIZE) {
+      num = 0;
+    } else {
+      word_type mask = mask_ones(count) << (INT_SIZE - offset - count);
+      num &= ~mask;
+    }
   }
 
   static void apply_bits(word_type& num, std::size_t offset, std::size_t count, word_type source) {
-    clear_bits(num, offset, count);
-    num |= source << (INT_SIZE - offset - count);
+    if (offset == 0 && count == INT_SIZE) {
+      num = source;
+    } else {
+      clear_bits(num, offset, count);
+      num |= first_bits(source, count) << (INT_SIZE - offset - count);
+    }
   }
 
   static word_type& get_element(word_type* data, std::size_t idx) {
@@ -169,33 +200,55 @@ private:
   }
 
   template <class Function>
-  bitset_view operation(const const_view& other, Function binary_op) const {
+  bitset_view apply_binary(const const_view& other, Function binary_op) const {
     assert(size() == other.size());
+
     word_type* data = begin()._cur;
     word_type* other_data = other.begin()._cur;
-
     std::size_t idx = begin()._index;
     std::size_t other_idx = other.begin()._index;
     std::size_t border = end()._index;
 
     while (idx < border) {
-      std::size_t c = border - idx;
+      std::size_t count = border - idx;
       std::size_t i = idx % INT_SIZE;
       std::size_t j = other_idx % INT_SIZE;
 
       if (i <= j) {
-        c = std::min(c, INT_SIZE - j);
+        count = std::min(count, INT_SIZE - j);
       } else {
-        c = std::min(c, INT_SIZE - i);
+        count = std::min(count, INT_SIZE - i);
       }
 
-      word_type source = sub_bits(get_element(other_data, other_idx), j, c);
-      word_type des = sub_bits(get_element(data, idx), i, c);
+      word_type& cur = get_element(data, idx);
+      word_type other_cur = get_element(other_data, other_idx);
+      word_type source = sub_bits(other_cur, j, count);
+      word_type des = sub_bits(cur, i, count);
+      apply_bits(cur, i, count, binary_op(des, source));
 
-      apply_bits(get_element(data, idx), i, c, binary_op(des, source));
-      idx += c;
-      other_idx += c;
+      idx += count;
+      other_idx += count;
     }
     return *this;
+  }
+
+  template <class Function>
+  bool apply_unary(Function unary_op) const {
+    word_type* data = begin()._cur;
+
+    std::size_t idx = begin()._index;
+    std::size_t border = end()._index;
+
+    while (idx < border) {
+      std::size_t i = idx % INT_SIZE;
+      std::size_t count = std::min(border - idx, INT_SIZE - i);
+      word_type& cur = get_element(data, idx);
+
+      if (!unary_op(cur, i, count)) {
+        return false;
+      }
+      idx += count;
+    }
+    return true;
   }
 };

@@ -120,16 +120,18 @@ bitset& bitset::operator>>=(std::size_t count) & {
 }
 
 bitset& bitset::flip() & {
-  std::for_each(begin(), end(), [](reference el) { el.flip(); });
+  subview().flip();
   return *this;
 }
 
 bitset& bitset::set() & {
-  return set_bit(true);
+  subview().set();
+  return *this;
 }
 
 bitset& bitset::reset() & {
-  return set_bit(false);
+  subview().reset();
+  return *this;
 }
 
 bitset& bitset::set_bit(bool value) {
@@ -137,7 +139,11 @@ bitset& bitset::set_bit(bool value) {
 }
 
 bitset& bitset::set_bit(const iterator& first, const iterator& last, bool value) {
-  std::fill(first, last, value);
+  if (value) {
+    view(first, last).set();
+  } else {
+    view(first, last).reset();
+  }
   return *this;
 }
 
@@ -152,15 +158,15 @@ void bitset::swap(bitset& other) {
 }
 
 bool bitset::all() const {
-  return std::all_of(begin(), end(), std::identity());
+  return subview().all();
 }
 
 bool bitset::any() const {
-  return std::any_of(begin(), end(), std::identity());
+  return subview().any();
 }
 
 std::size_t bitset::count() const {
-  return std::count(begin(), end(), true);
+  return subview().count();
 }
 
 bitset::operator const_view() const {
