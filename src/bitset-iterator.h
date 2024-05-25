@@ -7,9 +7,12 @@
 
 template <typename T>
 class bitset_iterator {
+  template <typename S>
+  friend class bitset_view;
+
 public:
   using value_type = bool;
-  using word_type = uint32_t;
+  using word_type = uint8_t;
 
   using difference_type = std::ptrdiff_t;
   using pointer = void;
@@ -28,7 +31,7 @@ public:
 
   ~bitset_iterator() = default;
 
-  bitset_iterator(uint32_t* cur, std::size_t index)
+  bitset_iterator(word_type* cur, std::size_t index)
       : _cur(cur)
       , _index(index) {}
 
@@ -124,7 +127,7 @@ public:
   }
 
 private:
-  uint32_t* _cur;
+  word_type* _cur;
   std::size_t _index;
-  static const std::size_t INT_BITS = 32;
+  static const std::size_t INT_BITS = sizeof(word_type) * 8;
 };

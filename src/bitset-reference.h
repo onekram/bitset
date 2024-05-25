@@ -8,7 +8,7 @@ class bitset_reference {
 public:
   using pointer = T*;
 
-  using word_type = uint32_t;
+  using word_type = uint8_t;
 
 public:
   bitset_reference() = delete;
@@ -41,7 +41,7 @@ public:
     return (*_p & get_mask()) != 0;
   }
 
-  operator bitset_reference<const uint32_t>() const {
+  operator bitset_reference<const word_type>() const {
     return {_p, _index};
   }
 
@@ -58,8 +58,10 @@ private:
   pointer _p;
   std::size_t _index;
 
-  uint32_t get_mask() const {
-    uint32_t ONE = 1;
-    return ONE << _index;
+  static const std::size_t INT_BITS = sizeof(word_type) * 8;
+
+  word_type get_mask() const {
+    word_type ONE = 1;
+    return ONE << (INT_BITS - _index - 1);
   }
 };

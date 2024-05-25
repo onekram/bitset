@@ -12,7 +12,7 @@ template <typename T>
 class bitset_view {
 public:
   using value_type = bool;
-  using word_type = uint32_t;
+  using word_type = uint8_t;
 
   using reference = T;
   using const_reference = bitset_reference<const word_type>;
@@ -68,15 +68,15 @@ public:
   }
 
   bitset_view operator&=(const const_view& other) const {
-    return operation(other, [](bool l, bool r) { return l && r; });
+    return operation(other, [](word_type l, word_type r) { return l & r; });
   }
 
   bitset_view operator|=(const const_view& other) const {
-    return operation(other, [](bool l, bool r) { return l || r; });
+    return operation(other, [](word_type l, word_type r) { return l | r; });
   }
 
   bitset_view operator^=(const const_view& other) const {
-    return operation(other, [](bool l, bool r) { return l ^ r; });
+    return operation(other, [](word_type l, word_type r) { return l ^ r; });
   }
 
   bitset_view flip() const {
@@ -123,15 +123,79 @@ private:
   iterator _begin;
   iterator _end;
 
+  static const std::size_t INT_BITS = sizeof(word_type) * 8;
+  static constexpr word_type ALL_ONE = -1;
+
   bitset_view set_bit(bool value) const {
     std::fill(begin(), end(), value);
     return *this;
   }
 
-  bitset_view
-  operation(const bitset_view<const_reference>& other, const std::function<bool(bool, bool)>& binary_op) const {
+  static word_type first_bits(word_type num, std::size_t count) {
+    if (count == 0) {
+      return 0;
+    }
+    if (count == INT_BITS) {
+      return num;
+    }
+    return num & (ALL_ONE >> (INT_BITS - count));
+  }
+
+  static word_type sub_bits(word_type num, std::size_t offset, std::size_t count) {
+    word_type res = first_bits(num, INT_BITS - offset);
+    res >>= (INT_BITS - offset - count);
+    return res;
+  }
+
+  static word_type mask_ones(std::size_t count) {
+    if (count == 0) {
+      return 0;
+    }
+    return ALL_ONE >> (INT_BITS - count);
+  }
+
+  static void clear_bits(word_type& num, std::size_t offset, std::size_t count) {
+    word_type mask = mask_ones(count) << (INT_BITS - offset - count);
+    num &= ~mask;
+  }
+
+  static void apply_bits(word_type& num, std::size_t offset, std::size_t count, word_type source) {
+    clear_bits(num, offset, count);
+    num |= source << (INT_BITS - offset - count);
+  }
+
+  static word_type& get_element(word_type* data, std::size_t idx) {
+    return data[idx / INT_BITS];
+  }
+
+  template <class Function>
+  bitset_view operation(const const_view& other, Function binary_op) const {
     assert(size() == other.size());
-    std::transform(begin(), end(), other.begin(), begin(), binary_op);
+    word_type* data = begin()._cur;
+    word_type* other_data = other.begin()._cur;
+
+    std::size_t idx = begin()._index;
+    std::size_t other_idx = other.begin()._index;
+    std::size_t border = end()._index;
+
+    while (idx < border) {
+      std::size_t c = border - idx;
+      std::size_t i = idx % INT_BITS;
+      std::size_t j = other_idx % INT_BITS;
+
+      if (i <= j) {
+        c = std::min(c, INT_BITS - j);
+      } else {
+        c = std::min(c, INT_BITS - i);
+      }
+
+      word_type source = sub_bits(get_element(other_data, other_idx), j, c);
+      word_type des = sub_bits(get_element(data, idx), i, c);
+
+      apply_bits(get_element(data, idx), i, c, binary_op(des, source));
+      idx += c;
+      other_idx += c;
+    }
     return *this;
   }
 };

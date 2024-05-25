@@ -85,15 +85,18 @@ bitset::const_iterator bitset::end() const {
 }
 
 bitset& bitset::operator&=(const const_view& other) & {
-  return operation(other, [](bool l, bool r) { return l && r; });
+  view(*this) &= other;
+  return *this;
 }
 
 bitset& bitset::operator|=(const const_view& other) & {
-  return operation(other, [](bool l, bool r) { return l || r; });
+  view(*this) |= other;
+  return *this;
 }
 
 bitset& bitset::operator^=(const const_view& other) & {
-  return operation(other, [](bool l, bool r) { return l ^ r; });
+  view(*this) ^= other;
+  return *this;
 }
 
 bitset& bitset::operator<<=(std::size_t count) & {
@@ -160,12 +163,6 @@ std::size_t bitset::count() const {
   return std::count(begin(), end(), true);
 }
 
-bitset& bitset::operation(const const_view& other, const std::function<bool(bool, bool)>& binary_op) {
-  assert(size() == other.size());
-  std::transform(begin(), end(), other.begin(), begin(), binary_op);
-  return *this;
-}
-
 bitset::operator const_view() const {
   return {begin(), end()};
 }
@@ -207,7 +204,7 @@ bitset::bitset(std::size_t size)
     , _capacity(get_capacity(_size))
     , _data(nullptr) {
   if (_capacity > 0) {
-    _data = new uint32_t[_capacity];
+    _data = new bitset::word_type[_capacity];
   }
 }
 
