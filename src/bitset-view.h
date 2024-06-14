@@ -105,7 +105,7 @@ public:
 
   bool any() const {
     return !apply_unary([](word_type num, std::size_t offset, std::size_t count) {
-      return count_bits(sub_bits(num, offset, count)) == 0;
+      return sub_bits(num, offset, count) == 0;
     });
   }
 
