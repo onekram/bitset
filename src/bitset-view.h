@@ -215,11 +215,7 @@ private:
       std::size_t i = idx % INT_SIZE;
       std::size_t j = other_idx % INT_SIZE;
 
-      if (i <= j) {
-        count = std::min(count, INT_SIZE - j);
-      } else {
-        count = std::min(count, INT_SIZE - i);
-      }
+      count = std::min({count, INT_SIZE - j, INT_SIZE - i});
 
       word_type& cur = get_element(data, idx);
       word_type other_cur = get_element(other_data, other_idx);
