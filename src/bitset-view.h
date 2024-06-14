@@ -162,7 +162,7 @@ private:
     if (count == INT_SIZE) {
       return num;
     }
-    return num & (ALL_ONE >> (INT_SIZE - count));
+    return num & mask_ones(count);
   }
 
   static word_type sub_bits(word_type num, std::size_t offset, std::size_t count) {
