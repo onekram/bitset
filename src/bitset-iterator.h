@@ -19,12 +19,12 @@ public:
   using difference_type = std::ptrdiff_t;
   using pointer = void;
 
-  using reference = T;
-  using const_reference = bitset_reference<const word_type>;
+  using reference = bitset_reference<T>;
+  using const_reference = bitset_reference<const T>;
 
   using iterator_category = std::random_access_iterator_tag;
 
-  friend class bitset_iterator<bitset_reference<word_type>>;
+  friend class bitset_iterator<word_type>;
 
 public:
   bitset_iterator() = default;
@@ -35,7 +35,7 @@ public:
 
   ~bitset_iterator() = default;
 
-  operator bitset_iterator<const_reference>() const {
+  operator bitset_iterator<const word_type>() const {
     return {_cur, _index};
   }
 

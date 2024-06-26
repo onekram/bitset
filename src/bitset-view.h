@@ -15,14 +15,14 @@ public:
   using value_type = bool;
   using word_type = uint64_t;
 
-  using reference = T;
-  using const_reference = bitset_reference<const word_type>;
+  using reference = bitset_reference<T>;
+  using const_reference = bitset_reference<const T>;
 
-  using iterator = bitset_iterator<reference>;
-  using const_iterator = bitset_iterator<const_reference>;
+  using iterator = bitset_iterator<T>;
+  using const_iterator = bitset_iterator<const T>;
 
-  using view = bitset_view<reference>;
-  using const_view = bitset_view<const_reference>;
+  using view = bitset_view<T>;
+  using const_view = bitset_view<const T>;
 
   static constexpr std::size_t npos = -1;
 
@@ -39,7 +39,7 @@ public:
 
   ~bitset_view() = default;
 
-  operator bitset_view<const_reference>() const {
+  operator bitset_view<const word_type>() const {
     return {begin(), end()};
   }
 
@@ -196,7 +196,7 @@ private:
     }
   }
 
-  static word_type& get_element(word_type* data, std::size_t idx) {
+  static T& get_element(T* data, std::size_t idx) {
     return data[idx / INT_SIZE];
   }
 
@@ -204,7 +204,7 @@ private:
   bool apply_binary(const const_view& other, Function binary_op) const {
     assert(size() == other.size());
 
-    word_type* data = begin()._cur;
+    T* data = begin()._cur;
     word_type* other_data = other.begin()._cur;
     std::size_t idx = begin()._index;
     std::size_t other_idx = other.begin()._index;
@@ -217,7 +217,7 @@ private:
 
       count = std::min({count, INT_SIZE - j, INT_SIZE - i});
 
-      word_type& cur = get_element(data, idx);
+      T& cur = get_element(data, idx);
       word_type other_cur = get_element(other_data, other_idx);
       word_type source = sub_bits(other_cur, j, count);
 
@@ -232,7 +232,7 @@ private:
 
   template <class Function>
   bool apply_unary(Function unary_op) const {
-    word_type* data = begin()._cur;
+    T* data = begin()._cur;
 
     std::size_t idx = begin()._index;
     std::size_t border = end()._index;
@@ -240,7 +240,7 @@ private:
     while (idx < border) {
       std::size_t i = idx % INT_SIZE;
       std::size_t count = std::min(border - idx, INT_SIZE - i);
-      word_type& cur = get_element(data, idx);
+      T& cur = get_element(data, idx);
 
       if (!unary_op(cur, i, count)) {
         return false;

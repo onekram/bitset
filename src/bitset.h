@@ -12,17 +12,16 @@
 class bitset {
 public:
   using value_type = bool;
-
   using word_type = uint64_t;
 
   using reference = bitset_reference<word_type>;
   using const_reference = bitset_reference<const word_type>;
 
-  using iterator = bitset_iterator<reference>;
-  using const_iterator = bitset_iterator<const_reference>;
+  using iterator = bitset_iterator<word_type>;
+  using const_iterator = bitset_iterator<const word_type>;
 
-  using view = bitset_view<reference>;
-  using const_view = bitset_view<const_reference>;
+  using view = bitset_view<word_type>;
+  using const_view = bitset_view<const word_type>;
 
   static constexpr std::size_t npos = -1;
 

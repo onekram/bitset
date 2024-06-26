@@ -224,7 +224,7 @@ bool operator==(const bitset::const_view& lhs, const bitset::const_view& rhs) {
   return lhs.size() == rhs.size() &&
          lhs.apply_binary(
              rhs,
-             [](bitset::word_type& num, std::size_t offset, std::size_t count, bitset::word_type source) {
+             [](const bitset::word_type& num, std::size_t offset, std::size_t count, bitset::word_type source) {
                bitset::word_type des = bitset::const_view::sub_bits(num, offset, count);
                return des == source;
              }
