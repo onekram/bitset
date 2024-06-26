@@ -16,13 +16,13 @@ public:
   using word_type = uint64_t;
 
   using reference = bitset_reference<T>;
-  using const_reference = bitset_reference<const T>;
+  using const_reference = bitset_reference<const word_type>;
 
   using iterator = bitset_iterator<T>;
-  using const_iterator = bitset_iterator<const T>;
+  using const_iterator = bitset_iterator<const word_type>;
 
   using view = bitset_view<T>;
-  using const_view = bitset_view<const T>;
+  using const_view = bitset_view<const word_type>;
 
   static constexpr std::size_t npos = -1;
 

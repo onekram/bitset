@@ -20,7 +20,7 @@ public:
   using pointer = void;
 
   using reference = bitset_reference<T>;
-  using const_reference = bitset_reference<const T>;
+  using const_reference = bitset_reference<const word_type>;
 
   using iterator_category = std::random_access_iterator_tag;
 
